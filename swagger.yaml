@@ -1,22 +1,18 @@
 swagger: '2.0'
 info:
   description: 'This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.'
-  version: 1.0.6
-  title: Swagger Petstore
-  termsOfService: http://swagger.io/terms/
+  version: 1.0
+  title: Paziresh24
   contact:
-    email: apiteam@swagger.io
+    email: info@paziresh24.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-host: petstore.swagger.io
-basePath: /v2
+host: api.paziresh24.com
+basePath: /v1
 tags:
-  - name: pet
-    description: Everything about your Pets
-    externalDocs:
-      description: Find out more
-      url: http://swagger.io
+  - name: provider
+    description: Everything about your Providers (like doctors)
   - name: store
     description: Access to Petstore orders
   - name: user
@@ -26,7 +22,6 @@ tags:
       url: http://swagger.io
 schemes:
   - https
-  - http
 paths:
   /pet/{petId}/uploadImage:
     post:
