@@ -2,45 +2,33 @@
   "swagger": "2.0",
   "info": {
     "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
-    "version": "1.0.6",
+    "version": "1.0",
     "title": "Paziresh24",
-    "termsOfService": "http://swagger.io/terms/",
     "contact": {
       "email": "info@paziresh24.com",
-      "tell": "021-25015015"
-    },
-    "license": {
-      "name": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
   "host": "api.paziresh24.com",
   "basePath": "/v1",
   "tags": [
     {
-      "name": "pet",
-      "description": "Everything about your Pets",
+      "name": "users",
+      "description": "Everything about Users",
       "externalDocs": {
-        "description": "Find out more",
-        "url": "http://swagger.io"
+        "description": "Find out more"
       }
     },
     {
-      "name": "store",
-      "description": "Access to Petstore orders"
+      "name": "provider",
+      "description": "Everything about Providers"
     },
     {
-      "name": "user",
-      "description": "Operations about user",
-      "externalDocs": {
-        "description": "Find out more about our store",
-        "url": "http://swagger.io"
-      }
+      "name": "membership",
+      "description": "Relationship between users in other platforms to paziresh24 profiles",
     }
   ],
   "schemes": [
-    "https",
-    "http"
+    "https"
   ],
   "paths": {
     "/pet/{petId}/uploadImage": {
@@ -1047,9 +1035,5 @@
         "name": "User"
       }
     }
-  },
-  "externalDocs": {
-    "description": "Find out more about Swagger",
-    "url": "http://swagger.io"
   }
 }
