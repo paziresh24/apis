@@ -31,7 +31,7 @@
     "https"
   ],
   "paths": {
-    "/pet/{petId}/uploadImage": {
+    "/user": {
       "post": {
         "tags": [
           "pet"
@@ -87,10 +87,10 @@
         ]
       }
     },
-    "/pet": {
-      "post": {
-        "tags": [
-          "pet"
+    "/users": {
+      "get": {
+        "users": [
+          "user"
         ],
         "summary": "Add a new pet to the store",
         "description": "",
