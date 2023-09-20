@@ -61,11 +61,9 @@ paths:
               type: object
               properties:
                 biography:
-                  type: string
+                  $ref: '#/components/schemas/provider/properties/biography'
                 employee_id:
-                  type: string
-              required:
-                - biography
+                  $ref: '#/components/schemas/provider/properties/employee_id'
       responses:
         default:
           description: Default error sample response
@@ -111,17 +109,3 @@ components:
           description: 'prefix of provider according to his/her job 
             (ex: for doctors is دکتر)'
           type: string
-    provider-request:
-      title: Root Type for provider-request
-      description: ""
-      type: object
-      properties:
-        biography:
-          description: بیوگرافی
-          type: string
-        employee_id:
-          description: شناسه ی شغلی
-          type: string
-      example:
-        biography: بیوگرافی
-        employee_id: شناسه ی شغلی
