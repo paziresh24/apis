@@ -9,7 +9,7 @@ info:
     name: paziresh24
     url: https://www.paziresh24.com
 servers:
-  - url: https://api.paziresh24.com
+  - url: https://apigw.paziresh24.com
     variables: {}
 paths:
   /v1/providers:
@@ -17,7 +17,7 @@ paths:
       summary: get providers information
       description: ''
       operationId: getProviderInfo
-      parameters: 
+      parameters:
         - name: user_id
           description: Uniqe identifier of any users
           schema:
@@ -41,6 +41,32 @@ paths:
                         "job_title": "doctor"
                       }
                     }
+      tags:
+        - Providers
+    patch:
+      summary: Update provider fields
+      description: ''
+      operationId: user_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                biography:
+                  type: string
+                employee_id:
+                  type: string
+              required:
+                - biography
+      responses:
+        default:
+          description: Default error sample response
+          content:
+            application/json:
+              examples:
+                '204':
+                  description: No Content (request was successful)
       tags:
         - Providers
 tags:
