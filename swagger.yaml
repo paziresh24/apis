@@ -163,6 +163,10 @@ components:
     membership:
       description: Relational record between users and centers
       properties:
+        id:
+          description: Member identifier
+          example: 1
+          type: integer
         user_id:
           $ref: '#/components/schemas/user/properties/user_id'
         center_id:
