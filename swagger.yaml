@@ -24,19 +24,26 @@ paths:
             type: string
           in: query
       responses:
-        default:
+        200:
           description: Normal response to fetch a provider
           content:
             application/json:
+              schema:
+                properties:
+                  providers:
+                    nullable: false
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/provider'
               examples:
-                providers:
+                doctor:
                   value: |-
                     {
                       "providers" : {
                         "biography" : "Example biography of a doctor",
                         "user_id": 12345,
                         "slug": "dr_ali_rezaei",
-                        "prefix": "doctor",
+                        "prefix": "دکتر",
                         "employee_id": "12345",
                         "job_title": "doctor"
                       }
@@ -73,3 +80,48 @@ tags:
   - name: Providers
   - name: Users
   - name: Memberships
+components:
+  schemas:
+    user:
+      description: user information
+      properties:
+        user_id:
+          nullable: false
+          description: uniqe identifier of any user
+          type: integer
+    provider:
+      description: provider information
+      properties:
+        biography:
+          nullable: true
+          title: provider biography
+          type: string
+        user_id:
+          $ref: '#/components/schemas/user/properties/user_id'
+        employee_id:
+          description: 'uniqe identifer of any provider related to his/her job
+            (ex: for doctors is medical code)'
+          type: string
+        job_title:
+          description: job title of provider
+          enum:
+          - doctor
+          type: string
+        prefix:
+          description: 'prefix of provider according to his/her job 
+            (ex: for doctors is دکتر)'
+          type: string
+    provider-request:
+      title: Root Type for provider-request
+      description: ""
+      type: object
+      properties:
+        biography:
+          description: بیوگرافی
+          type: string
+        employee_id:
+          description: شناسه ی شغلی
+          type: string
+      example:
+        biography: بیوگرافی
+        employee_id: شناسه ی شغلی
