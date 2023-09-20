@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.0
 info:
   title: Paziresh24 web services document
   version: '1.0'
@@ -95,23 +95,26 @@ paths:
           $ref: '#/components/responses/201'
       tags:
         - Memberships
+  /v1/memberships/{center_id}/{user_id}:
+    summary: remove a membership
     delete:
-      summary: remove a membership
       description: >-
         Delete connection between user of other platforms and provider's profile
         in paziresh24
       operationId: deleteMembership
-      parameters: 
+      parameters:
         - name: user_id
-          in: query
+          in: path
           schema:
             $ref: '#/components/schemas/user/properties/user_id'
+          required: true
         - name: center_id
-          in: query
+          in: path
           schema:
             $ref: '#/components/schemas/membership/properties/center_id'
+          required: true
       responses:
-        204:
+        '204':
           $ref: '#/components/responses/204'
       tags:
         - Memberships
