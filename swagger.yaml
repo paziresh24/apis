@@ -21,10 +21,10 @@ paths:
         - name: user_id
           description: Uniqe identifier of any users
           schema:
-            type: string
+            $ref: '#/components/schemas/user/properties/user_id'
           in: query
       responses:
-        200:
+        '200':
           description: Normal response to fetch a provider
           content:
             application/json:
@@ -35,9 +35,7 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/provider'
-              examples:
-                doctor:
-                  value: |-
+              example:
                     {
                       "providers" : {
                         "biography" : "Example biography of a doctor",
@@ -74,6 +72,41 @@ paths:
                   description: No Content (request was successful)
       tags:
         - Providers
+  /v1/memberships:
+    summary: Relational record between users and centers
+    get:
+      summary: Get membership records
+      description: ''
+      operationId: getMembershipInfo
+      parameters: 
+        - name: user_id
+          schema:
+            $ref: '#/components/schemas/user/properties/user_id'
+          in: query
+      responses:
+        200:
+          description: Get membership records
+          content:
+            application/json:
+              example: 
+                {
+                  "memberships": [
+                    {
+                      "booking_link": "https://panel.paziresh24.com/api/v2/user-centers/1234",
+                      "center_id": "987654",
+                      "user_id": 2345
+                    }
+                  ]
+                }
+              schema:
+                properties:
+                  memberships:
+                    nullable: false
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/membership'
+      tags:
+        - Memberships
 tags:
   - name: Providers
   - name: Users
@@ -97,15 +130,28 @@ components:
         user_id:
           $ref: '#/components/schemas/user/properties/user_id'
         employee_id:
-          description: 'uniqe identifer of any provider related to his/her job
-            (ex: for doctors is medical code)'
+          description: >-
+            uniqe identifer of any provider related to his/her job (ex: for
+            doctors is medical code)
           type: string
         job_title:
           description: job title of provider
           enum:
-          - doctor
+            - doctor
           type: string
         prefix:
-          description: 'prefix of provider according to his/her job 
-            (ex: for doctors is دکتر)'
+          description: >-
+            prefix of provider according to his/her job  (ex: for doctors is
+            دکتر)
+          type: string
+    membership:
+      description: Relational record between users and centers
+      properties:
+        user_id:
+          $ref: '#/components/schemas/user/properties/user_id'
+        center_id:
+          description: Identifier of center (facilities that providers work on)
+          type: string
+        booking_link:
+          description: Base url of booking APIs for provider in the center
           type: string
