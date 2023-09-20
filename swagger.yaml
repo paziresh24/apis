@@ -83,7 +83,7 @@ paths:
         - Memberships
     post:
       summary: 'Insert membership record '
-      description: Link a user from other platforms to a provider's profile
+      description: Link a user from other platforms to a provider's profiles
       operationId: insertMembership
       requestBody:
         content:
