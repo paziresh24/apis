@@ -35,17 +35,6 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/provider'
-              example:
-                    {
-                      "providers" : {
-                        "biography" : "Example biography of a doctor",
-                        "user_id": 12345,
-                        "slug": "dr_ali_rezaei",
-                        "prefix": "دکتر",
-                        "employee_id": "12345",
-                        "job_title": "doctor"
-                      }
-                    }
       tags:
         - Providers
     patch:
@@ -63,13 +52,8 @@ paths:
                 employee_id:
                   $ref: '#/components/schemas/provider/properties/employee_id'
       responses:
-        default:
-          description: Default error sample response
-          content:
-            application/json:
-              examples:
-                '204':
-                  description: No Content (request was successful)
+        204:
+          $ref: '#/components/responses/204'
       tags:
         - Providers
   /v1/memberships:
@@ -78,26 +62,16 @@ paths:
       summary: Get membership records
       description: ''
       operationId: getMembershipInfo
-      parameters: 
+      parameters:
         - name: user_id
           schema:
             $ref: '#/components/schemas/user/properties/user_id'
           in: query
       responses:
-        200:
+        '200':
           description: Get membership records
           content:
             application/json:
-              example: 
-                {
-                  "memberships": [
-                    {
-                      "booking_link": "https://panel.paziresh24.com/api/v2/user-centers/1234",
-                      "center_id": "987654",
-                      "user_id": 2345
-                    }
-                  ]
-                }
               schema:
                 properties:
                   memberships:
@@ -105,6 +79,22 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/membership'
+      tags:
+        - Memberships
+    post:
+      summary: >-
+        Insert membership record 
+      description: 'Link a user from other platforms to a provider
+        profile'
+      operationId: insertMembership
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/membership'
+      responses:
+        201:
+          $ref: '#/components/responses/201'
       tags:
         - Memberships
 tags:
@@ -119,6 +109,7 @@ components:
         user_id:
           nullable: false
           description: uniqe identifier of any user
+          example: 123
           type: integer
     provider:
       description: provider information
@@ -127,6 +118,7 @@ components:
           nullable: true
           title: provider biography
           type: string
+          example: 'This is a example test biography'
         user_id:
           $ref: '#/components/schemas/user/properties/user_id'
         employee_id:
@@ -134,16 +126,19 @@ components:
             uniqe identifer of any provider related to his/her job (ex: for
             doctors is medical code)
           type: string
+          example: 1234567890
         job_title:
           description: job title of provider
           enum:
             - doctor
           type: string
+          example: 'doctor'
         prefix:
           description: >-
             prefix of provider according to his/her job  (ex: for doctors is
             دکتر)
           type: string
+          example: 'دکتر'
     membership:
       description: Relational record between users and centers
       properties:
@@ -151,7 +146,14 @@ components:
           $ref: '#/components/schemas/user/properties/user_id'
         center_id:
           description: Identifier of center (facilities that providers work on)
+          example: 9876
           type: string
         booking_link:
           description: Base url of booking APIs for provider in the center
           type: string
+          example: https://panel.paziresh24.com/api/v2/user-centers/1234
+  responses:
+    201:
+      description: Record inserted successfully
+    204:
+      description: No Content (request was successfully executed)
