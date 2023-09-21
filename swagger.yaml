@@ -138,10 +138,84 @@ paths:
           $ref: '#/components/responses/204'
       tags:
         - Memberships
+  /v1/booking/services:
+    summary: Booking flow operations
+    get:
+      summary: Get list of services
+      description: ''
+      operationId: ''
+      parameters:
+        - name: membership_id
+          schema:
+            $ref: '#/components/schemas/membership/properties/id'
+          in: query
+          required: true
+      responses:
+        '200':
+          description: Get membership records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/service'
+      tags:
+        - Booking
+  /v1/booking/freeturn:
+    summary: Suspends first freeturn of provider
+    get:
+      summary: suspend first freeturn of provider
+      description: ''
+      operationId: ''
+      parameters:
+        - name: membership_id
+          schema:
+            $ref: '#/components/schemas/membership/properties/id'
+          in: query
+          required: true
+        - name: service_id
+          schema:
+            $ref: '#/components/schemas/service/properties/id'
+          in: query
+          required: true
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/book_type'
+          required: true
+        - name: timezone
+          in: query
+          schema:
+            $ref: '#/components/schemas/timezone'
+          required: false
+      responses:
+        '200':
+          description: When a free time found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/freeturn'
+        '404':
+          description: When a free time not found
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: FAILED
+                  message:
+                    type: string
+
+
+      tags:
+        - Booking
 tags:
   - name: Providers
   - name: Users
   - name: Memberships
+  - name: Booking
+    description: Booking flow operations
 components:
   schemas:
     user:
@@ -202,6 +276,58 @@ components:
           description: Base url of booking APIs for provider in the center
           type: string
           example: https://panel.paziresh24.com/api/v2/user-centers/1234
+    service:
+      description: The information of service
+      properties:
+        id:
+          description: Service identifier
+          example: 1
+          type: string
+        title:
+          description: Service title
+          example: ویزیت
+          type: string
+        duration:
+          description: service duration
+          example: '00:15:00'
+          type: string
+        description:
+          description: service description
+          type: string
+    book_type:
+      type: string
+      enum: [web, app]
+    timezone:
+      type: string
+      enum:
+        - Asia/Tehran
+        - America/Chicago
+        - ...
+    freeturn:
+      description: Freeturn info
+      properties:
+        request_code:
+          description: code to use in book api
+          type: string
+          example: 650beaebbc99c0.04746452
+        from:
+          description: timestamp of appointment start
+          type: integer
+          example: 1695280500
+        to:
+          description: timestamp of appointment end
+          type: integer
+          example: 1695281400
+        from_iso:
+          description: iso time of appointment start based on timezone
+          type: string
+          example: 2023-09-21T10:45:00.000000+03:30
+          format: date-time
+        to_iso:
+          description: iso time of appointment end based on timezone
+          type: string
+          example: 2023-09-21T11:00:00.000000+03:30
+          format: date-time
   responses:
     '201':
       description: Record inserted successfully
