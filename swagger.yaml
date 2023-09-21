@@ -56,6 +56,26 @@ paths:
           $ref: '#/components/responses/204'
       tags:
         - Providers
+    post:
+      summary: Store a provider
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                slug:
+                  $ref: '#/components/schemas/provider/properties/slug'
+                employee_id:
+                  $ref: '#/components/schemas/provider/properties/employee_id'
+                user_id:
+                  $ref: '#/components/schemas/provider/properties/user_id'
+      responses:
+        '201':
+          $ref: '#/components/responses/201'
+      tags:
+        - Providers
   /v1/memberships:
     summary: Relational record between users and centers
     get:
@@ -158,6 +178,11 @@ components:
           description: >-
             prefix of provider according to his/her job  (ex: for doctors is
             دکتر)
+          type: string
+          example: دکتر
+        slug:
+          description: >-
+            Provider slug profile (ex: دکتر-محمدی is accessible from this url https://paziresh24.com/dr/دکتر-محمدی)
           type: string
           example: دکتر
     membership:
