@@ -231,12 +231,12 @@ paths:
                 sub_user:
                   allOf:
                     - $ref: '#/components/schemas/subUser/properties/id'
-                    - description: if sub user is present, the book will be set for sub user.
+                    - description: >-
+                        if sub user is present, the book will be set for sub user.
               required:
                 - request_code
                 - membership_id
                 - type
-
       responses:
         '200':
           description: Book submitted successfully
@@ -260,6 +260,183 @@ paths:
                   book_number:
                     type: integer
 
+      tags:
+        - Booking
+
+  /v1/booking/freedays:
+    summary: Suspends first freeturn of provider
+    get:
+      summary: suspend first freeturn of provider
+      description: ''
+      operationId: ''
+      parameters:
+        - name: membership_id
+          schema:
+            $ref: '#/components/schemas/membership/properties/id'
+          in: query
+          required: true
+        - name: service_id
+          schema:
+            $ref: '#/components/schemas/service/properties/id'
+          in: query
+          required: true
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/book_type'
+          required: true
+        - name: timezone
+          in: query
+          schema:
+            $ref: '#/components/schemas/timezone'
+          required: false
+      responses:
+        '200':
+          description: When a free time found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: integer
+                    date_iso:
+                      type: string
+                      format: date-time
+                      example: 2023-09-21T00:00:00.000000+03:30
+        '404':
+          description: When a free time not found
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: FAILED
+                  message:
+                    type: string
+      tags:
+        - Booking
+  /v1/booking/freeturns:
+    summary: Suspends first freeturn of provider
+    get:
+      summary: suspend first freeturn of provider
+      description: ''
+      operationId: ''
+      parameters:
+        - name: membership_id
+          schema:
+            $ref: '#/components/schemas/membership/properties/id'
+          in: query
+          required: true
+        - name: service_id
+          schema:
+            $ref: '#/components/schemas/service/properties/id'
+          in: query
+          required: true
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/book_type'
+          required: true
+        - name: date
+          in: query
+          schema:
+            type: integer
+          required: true
+        - name: timezone
+          in: query
+          schema:
+            $ref: '#/components/schemas/timezone'
+          required: false
+      responses:
+        '200':
+          description: When a free time found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    from:
+                      type: integer
+                    to:
+                      type: integer
+                    workhour_turn_num:
+                      type: integer
+                    from_iso:
+                      type: string
+                      format: date-time
+                      example: 2023-09-21T14:30:00.000000+03:30
+                    to_iso:
+                      type: string
+                      format: date-time
+                      example: 2023-09-21T14:45:00.000000+03:30
+        '404':
+          description: When a free time not found
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: FAILED
+                  message:
+                    type: string
+      tags:
+        - Booking
+  /v1/booking/suspend:
+    post:
+      summary: 'suspend an event'
+      description: ''
+      operationId: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                membership_id:
+                  $ref: '#/components/schemas/membership/properties/id'
+                service_id:
+                  $ref: '#/components/schemas/service/properties/id'
+                type:
+                  $ref: '#/components/schemas/book_type'
+                from:
+                  type: integer
+                  description: start timestamp of block
+                to:
+                  type: integer
+                  description: end timestamp of block
+      responses:
+        '200':
+          description: When the suspend request succeed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request_code:
+                    type: string
+      tags:
+        - Booking
+  /v1/booking/suspend/{request_code}:
+    delete:
+      summary: remove a suspended event
+      description: ''
+      operationId: ''
+      parameters:
+        - name: request_code
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/freeturn/properties/request_code'
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
       tags:
         - Booking
 tags:
@@ -318,7 +495,8 @@ components:
           example: دکتر
         slug:
           description: >-
-            Provider slug profile (ex: دکتر-محمدی is accessible from this url https://paziresh24.com/dr/دکتر-محمدی)
+            Provider slug profile (ex: دکتر-محمدی is accessible from this url
+            https://paziresh24.com/dr/دکتر-محمدی)
           type: string
           example: دکتر
     membership:
@@ -397,7 +575,6 @@ components:
       description: Record inserted successfully
     '204':
       description: No Content (request was successfully executed)
-
   securitySchemes:
     BearerAuth:
       type: http
