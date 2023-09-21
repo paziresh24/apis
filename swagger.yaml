@@ -21,7 +21,7 @@ paths:
         - name: user_id
           description: Uniqe identifier of any users
           schema:
-            $ref: '#/components/schemas/user/properties/user_id'
+            $ref: '#/components/schemas/user/properties/id'
           in: query
       responses:
         '200':
@@ -85,7 +85,7 @@ paths:
       parameters:
         - name: user_id
           schema:
-            $ref: '#/components/schemas/user/properties/user_id'
+            $ref: '#/components/schemas/user/properties/id'
           in: query
       responses:
         '200':
@@ -126,7 +126,7 @@ paths:
         - name: user_id
           in: path
           schema:
-            $ref: '#/components/schemas/user/properties/user_id'
+            $ref: '#/components/schemas/user/properties/id'
           required: true
         - name: center_id
           in: path
@@ -206,7 +206,59 @@ paths:
                     example: FAILED
                   message:
                     type: string
+      tags:
+        - Booking
+  /v1/booking/book:
+    summary: Submit book
+    post:
+      summary: Submit book
+      description: ''
+      operationId: ''
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                request_code:
+                  $ref: '#/components/schemas/freeturn/properties/request_code'
+                membership_id:
+                  $ref: '#/components/schemas/membership/properties/id'
+                type:
+                  $ref: '#/components/schemas/book_type'
+                sub_user:
+                  allOf:
+                    - $ref: '#/components/schemas/subUser/properties/id'
+                    - description: if sub user is present, the book will be set for sub user.
+              required:
+                - request_code
+                - membership_id
+                - type
 
+      responses:
+        '200':
+          description: Book submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  book_id:
+                    type: string
+                  center_id:
+                    $ref: '#/components/schemas/membership/properties/center_id'
+                  reference_id:
+                    type: string
+                  from:
+                    $ref: '#/components/schemas/freeturn/properties/from'
+                  to:
+                    $ref: '#/components/schemas/freeturn/properties/to'
+                  has_payment:
+                    type: boolean
+                  book_number:
+                    type: integer
 
       tags:
         - Booking
@@ -221,11 +273,21 @@ components:
     user:
       description: user information
       properties:
-        user_id:
+        id:
           nullable: false
           description: uniqe identifier of any user
           example: 123
           type: integer
+    subUser:
+      description: user subset information
+      properties:
+        id:
+          nullable: false
+          description: uniqe identifier of any subset
+          example: 123
+          type: integer
+        user_id:
+          $ref: '#/components/schemas/user/properties/id'
     provider:
       description: provider information
       properties:
@@ -235,7 +297,7 @@ components:
           type: string
           example: This is a example test biography
         user_id:
-          $ref: '#/components/schemas/user/properties/user_id'
+          $ref: '#/components/schemas/user/properties/id'
         employee_id:
           description: >-
             uniqe identifer of any provider related to his/her job (ex: for
@@ -267,7 +329,7 @@ components:
           example: 1
           type: integer
         user_id:
-          $ref: '#/components/schemas/user/properties/user_id'
+          $ref: '#/components/schemas/user/properties/id'
         center_id:
           description: Identifier of center (facilities that providers work on)
           example: 9876
@@ -296,7 +358,9 @@ components:
           type: string
     book_type:
       type: string
-      enum: [web, app]
+      enum:
+        - web
+        - app
     timezone:
       type: string
       enum:
@@ -321,15 +385,21 @@ components:
         from_iso:
           description: iso time of appointment start based on timezone
           type: string
-          example: 2023-09-21T10:45:00.000000+03:30
+          example: '2023-09-21T10:45:00.000000+03:30'
           format: date-time
         to_iso:
           description: iso time of appointment end based on timezone
           type: string
-          example: 2023-09-21T11:00:00.000000+03:30
+          example: '2023-09-21T11:00:00.000000+03:30'
           format: date-time
   responses:
     '201':
       description: Record inserted successfully
     '204':
       description: No Content (request was successfully executed)
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
