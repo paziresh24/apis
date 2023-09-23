@@ -138,8 +138,8 @@ paths:
           $ref: '#/components/responses/204'
       tags:
         - Memberships
-  /v1/booking/services:
-    summary: Booking flow operations
+  /v1/services:
+    summary: get services of provider
     get:
       summary: Get list of services
       description: ''
@@ -160,58 +160,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/service'
       tags:
-        - Booking
-  /v1/booking/freeturn:
-    summary: Suspends first freeturn of provider
-    get:
-      summary: suspend first freeturn of provider
-      description: ''
-      operationId: ''
-      parameters:
-        - name: membership_id
-          schema:
-            $ref: '#/components/schemas/membership/properties/id'
-          in: query
-          required: true
-        - name: service_id
-          schema:
-            $ref: '#/components/schemas/service/properties/id'
-          in: query
-          required: true
-        - name: type
-          in: query
-          schema:
-            $ref: '#/components/schemas/book_type'
-          required: true
-        - name: timezone
-          in: query
-          schema:
-            $ref: '#/components/schemas/timezone'
-          required: false
-      responses:
-        '200':
-          description: When a free time found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/freeturn'
-        '404':
-          description: When a free time not found
-          content:
-            application/json:
-              schema:
-                properties:
-                  status:
-                    type: string
-                    example: FAILED
-                  message:
-                    type: string
-      tags:
-        - Booking
-  /v1/booking/book:
-    summary: Submit book
+        - Services
+  /v1/appointments:
+    summary: Appointments
     post:
-      summary: Submit book
+      summary: Submit an appointment
       description: ''
       operationId: ''
       security:
@@ -222,69 +175,65 @@ paths:
             schema:
               type: object
               properties:
-                request_code:
-                  $ref: '#/components/schemas/freeturn/properties/request_code'
-                membership_id:
-                  $ref: '#/components/schemas/membership/properties/id'
-                type:
-                  $ref: '#/components/schemas/book_type'
+                availability_id:
+                  type: string
+                  description: the id of availability got from availability end point
                 sub_user:
                   allOf:
-                    - $ref: '#/components/schemas/subUser/properties/id'
+                    - $ref: '#/components/schemas/sub_user/properties/id'
                     - description: >-
                         if sub user is present, the book will be set for sub user.
               required:
-                - request_code
-                - membership_id
-                - type
+                - availability_id
       responses:
         '200':
-          description: Book submitted successfully
+          description: Appointment submitted successfully
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  book_id:
+                  appointment_id:
                     type: string
                   center_id:
                     $ref: '#/components/schemas/membership/properties/center_id'
                   reference_id:
                     type: string
                   from:
-                    $ref: '#/components/schemas/freeturn/properties/from'
+                    type: string
+                    format: date-time
                   to:
-                    $ref: '#/components/schemas/freeturn/properties/to'
+                    type: string
+                    format: date-time
                   has_payment:
                     type: boolean
-                  book_number:
-                    type: integer
-
       tags:
-        - Booking
+        - Appointments
 
-  /v1/booking/freedays:
-    summary: Suspends first freeturn of provider
+  /v1/availibility:
+    summary: Available slots
     get:
-      summary: suspend first freeturn of provider
+      summary: Get ist of available slots
       description: ''
       operationId: ''
       parameters:
-        - name: membership_id
-          schema:
-            $ref: '#/components/schemas/membership/properties/id'
-          in: query
-          required: true
         - name: service_id
           schema:
             $ref: '#/components/schemas/service/properties/id'
           in: query
           required: true
-        - name: type
+        - name: start_time
           in: query
+          description: start time of calendar. if not exist, first day of month will be considered.
           schema:
-            $ref: '#/components/schemas/book_type'
-          required: true
+            type: string
+            format: date-time
+        - name: end_time
+          in: query
+          description: end time of calendar. if not exist, last day of month will be considered.
+          schema:
+            type: string
+            format: date-time
         - name: timezone
           in: query
           schema:
@@ -301,11 +250,24 @@ paths:
                   type: object
                   properties:
                     date:
-                      type: integer
-                    date_iso:
                       type: string
                       format: date-time
                       example: 2023-09-21T00:00:00.000000+03:30
+                    slots:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          start_time:
+                            type: string
+                            format: partial-time
+                            example: 10:00:00
+                          end_time:
+                            type: string
+                            format: partial-time
+                            example: 10:15:00
         '404':
           description: When a free time not found
           content:
@@ -318,133 +280,15 @@ paths:
                   message:
                     type: string
       tags:
-        - Booking
-  /v1/booking/freeturns:
-    summary: Suspends first freeturn of provider
-    get:
-      summary: suspend first freeturn of provider
-      description: ''
-      operationId: ''
-      parameters:
-        - name: membership_id
-          schema:
-            $ref: '#/components/schemas/membership/properties/id'
-          in: query
-          required: true
-        - name: service_id
-          schema:
-            $ref: '#/components/schemas/service/properties/id'
-          in: query
-          required: true
-        - name: type
-          in: query
-          schema:
-            $ref: '#/components/schemas/book_type'
-          required: true
-        - name: date
-          in: query
-          schema:
-            type: integer
-          required: true
-        - name: timezone
-          in: query
-          schema:
-            $ref: '#/components/schemas/timezone'
-          required: false
-      responses:
-        '200':
-          description: When a free time found
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    from:
-                      type: integer
-                    to:
-                      type: integer
-                    workhour_turn_num:
-                      type: integer
-                    from_iso:
-                      type: string
-                      format: date-time
-                      example: 2023-09-21T14:30:00.000000+03:30
-                    to_iso:
-                      type: string
-                      format: date-time
-                      example: 2023-09-21T14:45:00.000000+03:30
-        '404':
-          description: When a free time not found
-          content:
-            application/json:
-              schema:
-                properties:
-                  status:
-                    type: string
-                    example: FAILED
-                  message:
-                    type: string
-      tags:
-        - Booking
-  /v1/booking/suspend:
-    post:
-      summary: 'suspend an event'
-      description: ''
-      operationId: ''
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                membership_id:
-                  $ref: '#/components/schemas/membership/properties/id'
-                service_id:
-                  $ref: '#/components/schemas/service/properties/id'
-                type:
-                  $ref: '#/components/schemas/book_type'
-                from:
-                  type: integer
-                  description: start timestamp of block
-                to:
-                  type: integer
-                  description: end timestamp of block
-      responses:
-        '200':
-          description: When the suspend request succeed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  request_code:
-                    type: string
-      tags:
-        - Booking
-  /v1/booking/suspend/{request_code}:
-    delete:
-      summary: remove a suspended event
-      description: ''
-      operationId: ''
-      parameters:
-        - name: request_code
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/freeturn/properties/request_code'
-      responses:
-        '204':
-          $ref: '#/components/responses/204'
-      tags:
-        - Booking
+        - Availability
+
 tags:
   - name: Providers
   - name: Users
   - name: Memberships
-  - name: Booking
-    description: Booking flow operations
+  - name: Services
+  - name: Availability
+  - name: Appointments
 components:
   schemas:
     user:
@@ -455,7 +299,7 @@ components:
           description: uniqe identifier of any user
           example: 123
           type: integer
-    subUser:
+    sub_user:
       description: user subset information
       properties:
         id:
@@ -534,42 +378,17 @@ components:
         description:
           description: service description
           type: string
-    book_type:
-      type: string
-      enum:
-        - web
-        - app
+        price:
+          description: service price
+          type: integer
+          example: 100000
+
     timezone:
       type: string
       enum:
         - Asia/Tehran
         - America/Chicago
         - ...
-    freeturn:
-      description: Freeturn info
-      properties:
-        request_code:
-          description: code to use in book api
-          type: string
-          example: 650beaebbc99c0.04746452
-        from:
-          description: timestamp of appointment start
-          type: integer
-          example: 1695280500
-        to:
-          description: timestamp of appointment end
-          type: integer
-          example: 1695281400
-        from_iso:
-          description: iso time of appointment start based on timezone
-          type: string
-          example: '2023-09-21T10:45:00.000000+03:30'
-          format: date-time
-        to_iso:
-          description: iso time of appointment end based on timezone
-          type: string
-          example: '2023-09-21T11:00:00.000000+03:30'
-          format: date-time
   responses:
     '201':
       description: Record inserted successfully
