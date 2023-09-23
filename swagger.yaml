@@ -175,6 +175,10 @@ paths:
             schema:
               type: object
               properties:
+                membership_id:
+                  $ref: '#/components/schemas/membership/properties/id'
+                service_id:
+                  $ref: '#/components/schemas/service/properties/id'
                 availability_id:
                   type: string
                   description: the id of availability got from availability end point
@@ -220,6 +224,11 @@ paths:
         - name: service_id
           schema:
             $ref: '#/components/schemas/service/properties/id'
+          in: query
+          required: true
+        - name: membership_id
+          schema:
+            $ref: '#/components/schemas/membership/properties/id'
           in: query
           required: true
         - name: start_time
@@ -269,16 +278,8 @@ paths:
                             format: partial-time
                             example: 10:15:00
         '404':
-          description: When a free time not found
-          content:
-            application/json:
-              schema:
-                properties:
-                  status:
-                    type: string
-                    example: FAILED
-                  message:
-                    type: string
+          $ref: '#/components/responses/404'
+
       tags:
         - Availability
 
@@ -394,6 +395,17 @@ components:
       description: Record inserted successfully
     '204':
       description: No Content (request was successfully executed)
+    '404':
+      description: Resource not found
+      content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: FAILED
+                  message:
+                    type: string
   securitySchemes:
     BearerAuth:
       type: http
