@@ -179,7 +179,7 @@ paths:
                   $ref: '#/components/schemas/membership/properties/id'
                 service_id:
                   $ref: '#/components/schemas/service/properties/id'
-                start_time:
+                time:
                   type: string
                   format: date-time
                 sub_user:
