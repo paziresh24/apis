@@ -179,9 +179,9 @@ paths:
                   $ref: '#/components/schemas/membership/properties/id'
                 service_id:
                   $ref: '#/components/schemas/service/properties/id'
-                availability_id:
+                start_time:
                   type: string
-                  description: the id of availability got from availability end point
+                  format: date-time
                 sub_user:
                   allOf:
                     - $ref: '#/components/schemas/sub_user/properties/id'
@@ -195,22 +195,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  appointment_id:
-                    type: string
-                  center_id:
-                    $ref: '#/components/schemas/membership/properties/center_id'
-                  reference_id:
-                    type: string
-                  from:
-                    type: string
-                    format: date-time
-                  to:
-                    type: string
-                    format: date-time
-                  has_payment:
-                    type: boolean
+                $ref: '#/components/schemas/appointment'
       tags:
         - Appointments
 
@@ -267,16 +252,10 @@ paths:
                       items:
                         type: object
                         properties:
-                          id:
+                          time:
                             type: string
-                          start_time:
-                            type: string
-                            format: partial-time
-                            example: 10:00:00
-                          end_time:
-                            type: string
-                            format: partial-time
-                            example: 10:15:00
+                            format: date-time
+                            example: 2023-09-21T10:00:00.000000+03:30
         '404':
           $ref: '#/components/responses/404'
 
@@ -383,6 +362,21 @@ components:
           description: service price
           type: integer
           example: 100000
+    appointment:
+      description: Booked appointment information
+      properties:
+        id:
+          type: string
+          format: uuid
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        has_payment:
+          type: boolean
+
 
     timezone:
       type: string
