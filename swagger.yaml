@@ -261,7 +261,135 @@ paths:
 
       tags:
         - Availability
+  /v1/users/{id}:
+    summary: users information
+    get:
+      summary: get user information
+      description: ''
+      operationId: getUser  
+      parameters: 
+        - name: id
+          schema:
+            $ref: '#/components/schemas/user/properties/id'
+          in: path
+          required: true
 
+      responses:
+        200:
+          description: Get user information
+          content:
+            application/json:
+              schema:
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/user'
+      tags:
+        - Users
+    patch:
+      summary: update user information
+      description: ''
+      operationId: updateUser 
+      security:
+        - BearerAuth: []
+      parameters: 
+        - name: id
+          schema:
+            $ref: '#/components/schemas/user/properties/id'
+          in: path
+          required: true
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/authenticated_user/properties/name'
+                family:
+                  $ref: '#/components/schemas/authenticated_user/properties/family'
+                national_code:
+                  $ref: '#/components/schemas/authenticated_user/properties/national_code'
+                cell:
+                  allOf: 
+                    - $ref: '#/components/schemas/authenticated_user/properties/cell'
+                  description: user new cell should be sent along with otp
+                otp:
+                    example: "4556"
+                    type: string
+                    description: The otp sent to the user new cell.
+          
+      responses:
+        200:
+          description: Get Authenticated user information
+          content:
+            application/json:
+              schema:
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/authenticated_user'
+      tags:
+        - Users
+        
+
+  /v1/users/{id}/otp:
+    patch:
+      summary: send otp to verify user new cell
+      description: ''
+      operationId: userCellOtp 
+      security:
+        - BearerAuth: []
+      parameters: 
+        - name: id
+          schema:
+            $ref: '#/components/schemas/user/properties/id'
+          in: path
+          required: true
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cell:
+                  allOf:
+                    - $ref: '#/components/schemas/authenticated_user/properties/cell'
+                    - description: user new cell
+                        
+
+      responses:
+        200:
+          description: otp sent to new user cell successfuly
+      tags:
+        - Users
+        
+  /v1/auth/me:
+    summary: fetch authenticated user record
+    get:
+      summary: get authenticated user information
+      description: ''
+      operationId: getAuthenticatedUser  
+      security:
+        - BearerAuth: []
+
+      responses:
+        200:
+          description: Get Authenticated user information
+          content:
+            application/json:
+              schema:
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/authenticated_user'
+      tags:
+        - Auth   
 tags:
   - name: Providers
   - name: Users
@@ -280,6 +408,50 @@ components:
           description: uniqe identifier of any user
           example: 123
           type: integer
+        name:
+          nullable: true
+          description: Name of the user
+          example: Mohammad
+          type: string
+        family:
+          nullable: true
+          description: Family of the user
+          example: Mohammadian
+          type: string
+          
+    authenticated_user:
+      description: authenticated user information
+      properties:
+        id:
+          $ref: '#/components/schemas/user/properties/id'
+        name:
+          $ref: '#/components/schemas/user/properties/name'
+
+        family:
+          $ref: '#/components/schemas/user/properties/family'
+        cell:
+          nullable: true
+          description: cell of the user
+          example: "913000000"
+          type: string
+        national_code:
+          nullable: true
+          description: national_code of the user
+          example: "124666554"
+          type: string
+    
+    auth:
+      description: user authentication
+      properties:
+        token:
+          nullable: false
+          description: token of the authenticated user
+          example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2RvY3RvcnMtYXBpLnBhemlyZXNoMjQuY29tL1YxL2F1dGgvbG9naW4iLCJpYXQiOjE2OTUyODMzMzksImV4cCI6MTY5NTMwNDkzOSwibmJmIjoxNjk1MjgzMzM5LCJqdGkiOiIzR01PanRlV1pCamtkQVZNIiwic3ViIjoiMzM1MjAxMyIsIm5hbWUiOiLYr9qp2KrYsSIsImZhbWlseSI6Itiv2LHbjNizIiwiZ2VuZGVyIjoibWFsZSIsInJvbGUiOiJ1c2VyIn0.kLzO0NK1ixjIPH4iT2Ku1nMqyapTwW_4i3h4vGAuaM8"
+          type: string
+
+          
+    
+
     sub_user:
       description: user subset information
       properties:
