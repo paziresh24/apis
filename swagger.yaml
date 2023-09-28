@@ -138,7 +138,7 @@ paths:
           $ref: '#/components/responses/204'
       tags:
         - Memberships
-  /v1/provider_specialities:
+  /v1/providers_specialities:
     get:
       summary: Get list of provider's specialities
       parameters:
@@ -153,7 +153,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  provider_specialities:
+                  providers_specialities:
                     nullable: false
                     type: array
                     items:
