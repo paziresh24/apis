@@ -440,14 +440,6 @@ components:
           example: "124666554"
           type: string
     
-    auth:
-      description: user authentication
-      properties:
-        token:
-          nullable: false
-          description: token of the authenticated user
-          example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2RvY3RvcnMtYXBpLnBhemlyZXNoMjQuY29tL1YxL2F1dGgvbG9naW4iLCJpYXQiOjE2OTUyODMzMzksImV4cCI6MTY5NTMwNDkzOSwibmJmIjoxNjk1MjgzMzM5LCJqdGkiOiIzR01PanRlV1pCamtkQVZNIiwic3ViIjoiMzM1MjAxMyIsIm5hbWUiOiLYr9qp2KrYsSIsImZhbWlseSI6Itiv2LHbjNizIiwiZ2VuZGVyIjoibWFsZSIsInJvbGUiOiJ1c2VyIn0.kLzO0NK1ixjIPH4iT2Ku1nMqyapTwW_4i3h4vGAuaM8"
-          type: string
 
           
     
