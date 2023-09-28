@@ -261,6 +261,44 @@ paths:
 
       tags:
         - Availability
+  /v1/providers_specialities:
+    get:
+      summary: Get list of provider's specialities
+      parameters:
+        - name: provider_id
+          schema:
+            $ref: '#/components/schemas/provider/properties/id'
+          in: query
+      responses:
+        '200':
+          description: Get list of provider's specialities
+          content:
+            application/json:
+              schema:
+                properties:
+                  providers_specialities:
+                    nullable: false
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/provider_speciality'
+      tags:
+        - Specialities
+    post:
+      summary: Store list of specialities alongside academic degree for a provider
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/provider_speciality'
+
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+      tags:
+        - Specialities
 
 tags:
   - name: Providers
@@ -269,6 +307,7 @@ tags:
   - name: Services
   - name: Availability
   - name: Appointments
+  - name: Specialities
 components:
   schemas:
     user:
@@ -292,6 +331,11 @@ components:
     provider:
       description: provider information
       properties:
+        id:
+          nullable: false
+          title: provider id
+          type: integer
+          example: 1234
         biography:
           nullable: true
           title: provider biography
@@ -323,6 +367,41 @@ components:
             https://paziresh24.com/dr/دکتر-محمدی)
           type: string
           example: دکتر
+    provider_speciality:
+      description: Speciality of a provider
+      properties:
+        speciality:
+          $ref: '#/components/schemas/speciality'
+        academic_degree:
+          $ref: '#/components/schemas/academic_degree'
+    speciality:
+      description: >-
+        Specialities which are supported and providers can choose from them, for example:  بهداشت روان، بیوشیمی بالینی
+      properties:
+        id:
+          nullable: false
+          title: Speciality id
+          type: integer
+          example: 1234
+        title:
+          nullable: true
+          title: Title of speciality
+          type: string
+          example: بهداشت روان
+    academic_degree:
+      description: >-
+        Academic degree which are supported and providers can choose from them, for example: کارشناس، متخصص
+      properties:
+        id:
+          nullable: false
+          title: Academic degree id
+          type: integer
+          example: 1234
+        title:
+          nullable: true
+          title: Title of an academic degree
+          type: string
+          example: کارشناسی ارشد
     membership:
       description: Relational record between users and centers
       properties:
