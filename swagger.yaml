@@ -261,7 +261,7 @@ paths:
 
       tags:
         - Availability
-  /v1/providers_specialities:
+  /v1/providers-specialities:
     get:
       summary: Get list of provider's specialities
       parameters:
@@ -299,6 +299,28 @@ paths:
           $ref: '#/components/responses/204'
       tags:
         - Specialities
+  /v1/specialities-tags:
+    get:
+      summary: tags of spciality
+      parameters:
+        - name: speciality_id
+          schema:
+            $ref: '#/components/schemas/speciality/properties/id'
+          in: query
+      responses:
+        '200':
+          description: Get tags of spciality
+          content:
+            application/json:
+              schema:
+                properties:
+                  specialities_tags:
+                    nullable: false
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/specialities_tags'
+      tags:
+        - SpecialitiesTags
   /v1/users/{id}:
     summary: users information
     get:
@@ -437,6 +459,7 @@ tags:
   - name: Availability
   - name: Appointments
   - name: Specialities
+  - name: SpecialitiesTags
 components:
   schemas:
     user:
@@ -533,19 +556,39 @@ components:
           type: string
           example: دکتر
     provider_speciality:
-      description: Speciality of a provider
+      description: Specialities of a provider
       properties:
         speciality:
           $ref: '#/components/schemas/speciality'
         academic_degree:
           $ref: '#/components/schemas/academic_degree'
+    
+    specialities_tags:
+      description: tags of speciality
+      properties:
+        tag:
+          $ref: '#/components/schemas/tag'
+          
+    tag:
+      properties:
+        id:
+          nullable: false
+          title: tag id
+          type: integer
+          example: 4
+        title:
+          nullable: true
+          title: Title of tag
+          type: string
+          example: خون، سرطان و انکولوژی'
+          
     speciality:
       description: >-
         Specialities which are supported and providers can choose from them, for example:  بهداشت روان، بیوشیمی بالینی
       properties:
         id:
           nullable: false
-          title: Speciality id
+          title: speciality id
           type: integer
           example: 1234
         title:
