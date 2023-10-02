@@ -105,6 +105,8 @@ paths:
       summary: 'Insert membership record '
       description: Link a user from other platforms to a provider's profiles
       operationId: insertMembership
+      security:
+        - BearerAuth: ['center_admin']
       requestBody:
         content:
           application/json:
@@ -122,6 +124,8 @@ paths:
         Delete connection between user of other platforms and provider's profile
         in paziresh24
       operationId: deleteMembership
+      security:
+        - BearerAuth: ['center_admin']
       parameters:
         - name: user_id
           in: path
