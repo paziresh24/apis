@@ -196,6 +196,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/appointment'
+        '409':
+          $ref: '#/components/responses/409'
       tags:
         - Appointments
 
@@ -326,8 +328,8 @@ paths:
     get:
       summary: get user information
       description: ''
-      operationId: getUser  
-      parameters: 
+      operationId: getUser
+      parameters:
         - name: id
           schema:
             $ref: '#/components/schemas/user/properties/id'
@@ -350,10 +352,10 @@ paths:
     patch:
       summary: update user information
       description: ''
-      operationId: updateUser 
+      operationId: updateUser
       security:
         - BearerAuth: []
-      parameters: 
+      parameters:
         - name: id
           schema:
             $ref: '#/components/schemas/user/properties/id'
@@ -373,14 +375,14 @@ paths:
                 national_code:
                   $ref: '#/components/schemas/authenticated_user/properties/national_code'
                 cell:
-                  allOf: 
+                  allOf:
                     - $ref: '#/components/schemas/authenticated_user/properties/cell'
                   description: user new cell should be sent along with otp
                 otp:
                     example: "4556"
                     type: string
                     description: The otp sent to the user new cell.
-          
+
       responses:
         200:
           description: Get Authenticated user information
@@ -394,16 +396,16 @@ paths:
                       $ref: '#/components/schemas/authenticated_user'
       tags:
         - Users
-        
+
 
   /v1/users/{id}/otp:
     patch:
       summary: send otp to verify user new cell
       description: ''
-      operationId: userCellOtp 
+      operationId: userCellOtp
       security:
         - BearerAuth: []
-      parameters: 
+      parameters:
         - name: id
           schema:
             $ref: '#/components/schemas/user/properties/id'
@@ -420,20 +422,20 @@ paths:
                   allOf:
                     - $ref: '#/components/schemas/authenticated_user/properties/cell'
                     - description: user new cell
-                        
+
 
       responses:
         200:
           description: otp sent to new user cell successfuly
       tags:
         - Users
-        
+
   /v1/auth/me:
     summary: fetch authenticated user record
     get:
       summary: get authenticated user information
       description: ''
-      operationId: getAuthenticatedUser  
+      operationId: getAuthenticatedUser
       security:
         - BearerAuth: []
 
@@ -449,7 +451,7 @@ paths:
                     items:
                       $ref: '#/components/schemas/authenticated_user'
       tags:
-        - Auth   
+        - Auth
 tags:
   - name: Providers
   - name: Users
@@ -480,7 +482,7 @@ components:
           description: Family of the user
           example: Mohammadian
           type: string
-          
+
     authenticated_user:
       description: authenticated user information
       properties:
@@ -501,10 +503,10 @@ components:
           description: national_code of the user
           example: "124666554"
           type: string
-    
 
-          
-    
+
+
+
 
     sub_user:
       description: user subset information
@@ -562,13 +564,13 @@ components:
           $ref: '#/components/schemas/speciality'
         academic_degree:
           $ref: '#/components/schemas/academic_degree'
-    
+
     specialities_tags:
       description: tags of speciality
       properties:
         tag:
           $ref: '#/components/schemas/tag'
-          
+
     tag:
       properties:
         id:
@@ -581,7 +583,7 @@ components:
           title: Title of tag
           type: string
           example: خون، سرطان و انکولوژی'
-          
+
     speciality:
       description: >-
         Specialities which are supported and providers can choose from them, for example:  بهداشت روان، بیوشیمی بالینی
@@ -687,6 +689,18 @@ components:
                     example: FAILED
                   message:
                     type: string
+    '409':
+      description: Resource not found
+      content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: FAILED
+                  message:
+                    type: string
+
   securitySchemes:
     BearerAuth:
       type: http
