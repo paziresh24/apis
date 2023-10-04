@@ -288,7 +288,7 @@ paths:
                     items:
                       $ref: '#/components/schemas/provider_speciality'
       tags:
-        - Specialities
+        - Providers Specialities
     post:
       summary: Store list of specialities alongside academic degree for a provider
       description: ''
@@ -296,15 +296,62 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/provider_speciality'
+              type: object
+              properties:
+                alias:
+                  $ref: '#/components/schemas/provider_speciality/properties/alias'
+                academic_degree_id:
+                  $ref: '#/components/schemas/academic_degree/properties/id'
+                speciality_id:
+                  $ref: '#/components/schemas/speciality/properties/id'
 
       responses:
         '204':
           $ref: '#/components/responses/204'
       tags:
-        - Specialities
+        - Providers Specialities
+  /v1/providers-specialities/{id}:
+    patch:
+      parameters:
+        - name: id
+          schema:
+            $ref: '#/components/schemas/provider_speciality/properties/id'
+          in: path
+          required: true
+      summary: Update speciality alongside academic degree of a provider
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alias:
+                  $ref: '#/components/schemas/provider_speciality/properties/alias'
+                academic_degree_id:
+                  $ref: '#/components/schemas/academic_degree/properties/id'
+                speciality_id:
+                  $ref: '#/components/schemas/speciality/properties/id'
+
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+      tags:
+        - Providers Specialities
+    delete:
+      parameters:
+        - name: id
+          schema:
+            $ref: '#/components/schemas/provider_speciality/properties/id'
+          in: path
+          required: true
+      summary: delete a record of providers specialities
+      description: ''
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+      tags:
+        - Providers Specialities
   /v1/specialities-tags:
     get:
       summary: tags of spciality
@@ -464,7 +511,7 @@ tags:
   - name: Services
   - name: Availability
   - name: Appointments
-  - name: Specialities
+  - name: Providers Specialities
   - name: SpecialitiesTags
 components:
   schemas:
@@ -564,6 +611,17 @@ components:
     provider_speciality:
       description: Specialities of a provider
       properties:
+        id:
+          nullable: false
+          title: provider speciality id
+          type: integer
+          example: 1234
+        alias:
+          title: alias
+          nullable: true
+          description: this refers to an alias title which was chosen by the provider
+          type: string
+          example: "فوق تخصص حلق و گوش"
         speciality:
           $ref: '#/components/schemas/speciality'
         academic_degree:
