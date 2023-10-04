@@ -503,6 +503,76 @@ paths:
                       $ref: '#/components/schemas/authenticated_user'
       tags:
         - Auth
+  /v1/auth/resend-password:
+    summary: send new password to user cell
+    get:
+      summary: send new password to user cell
+      description: ''
+      operationId: resendPassword  
+      parameters:
+        - name: mobile
+          schema:
+            nullable: false
+            description: mobile number of the user
+            example: "913000000"
+            type: string
+          in: query
+
+      responses:
+        200:
+          description: new Password sent succecfully
+
+      tags:
+        - Auth
+        
+  /v1/auth/login:
+    post:
+      summary: authenticate user by username and password
+      description: ''
+      operationId: LoginUser 
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  allOf:
+                     - nullable: false
+                     - description: username of the user
+                     - example: "913000000"
+                     - type: string
+                password:
+                  allOf:
+                     - nullable: false
+                     - description: password of the user
+                     - example: "4552"
+                     - type: string
+      responses:
+        200:
+          description: sucess authentication response
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/success_authentication'
+      tags:
+        - Auth  
+  /v1/auth/refresh:
+    post:
+      summary: refresh expired authentication token
+      operationId: RefreshToken
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: success refresh response
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/success_authentication'                 
+      tags:
+        - Auth   
 tags:
   - name: Providers
   - name: Users
@@ -533,7 +603,20 @@ components:
           description: Family of the user
           example: Mohammadian
           type: string
-
+    success_authentication:
+        properties:
+            access_token:
+              description: token of the authenticated user
+              example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2RvY3RvcnMtYXBpLnBhemlyZXNoMjQuY29tL1YxL2F1dGgvbG9naW4iLCJpYXQiOjE2OTY0MDA0MTIsImV4cCI6MTY5NzYxMDAxMiwibmJmIjoxNjk2NDAwNDEyLCJqdGkiOiJTUE1tVlhJNVNxQ2NCV1haIiwic3ViIjoiMTI0OTg5NzUiLCJuYW1lIjoi2KrYs9iqIiwiZmFtaWx5Ijoi2KrYs9iqIiwiZ2VuZGVyIjoibWFsZSIsInJvbGUiOiJ1c2VyIn0.zGHVD4MgJePIssjfGQWhG1AwBRefSVPUHecXF8WYpq0"
+              type: string
+            token_type: 
+              description: type of the token
+              example: "bearer"
+              type: string
+            expires_in:
+              description: token expire duration
+              example: 1209600
+              type: integer
     authenticated_user:
       description: authenticated user information
       properties:
