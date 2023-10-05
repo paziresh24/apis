@@ -106,7 +106,8 @@ paths:
       description: Link a user from other platforms to a provider's profiles
       operationId: insertMembership
       security:
-        - BearerAuth: ['center_admin']
+        - BearerAuth:
+            - center_admin
       requestBody:
         content:
           application/json:
@@ -125,7 +126,8 @@ paths:
         in paziresh24
       operationId: deleteMembership
       security:
-        - BearerAuth: ['center_admin']
+        - BearerAuth:
+            - center_admin
       parameters:
         - name: user_id
           in: path
@@ -178,6 +180,7 @@ paths:
           application/json:
             schema:
               type: object
+              description: Either `time` or `reserve_id` is required.
               properties:
                 membership_id:
                   $ref: '#/components/schemas/membership/properties/id'
@@ -186,13 +189,16 @@ paths:
                 time:
                   type: string
                   format: date-time
+                reserve_id:
+                  $ref: '#/components/schemas/reserve/properties/id'
                 sub_user:
                   allOf:
                     - $ref: '#/components/schemas/sub_user/properties/id'
                     - description: >-
                         if sub user is present, the book will be set for sub user.
               required:
-                - availability_id
+                - membership_id
+                - service_id
       responses:
         '200':
           description: Appointment submitted successfully
@@ -224,13 +230,17 @@ paths:
           required: true
         - name: start_time
           in: query
-          description: start time of calendar. if not exist, first day of month will be considered.
+          description: >-
+            start time of calendar. if not exist, first day of month will be
+            considered.
           schema:
             type: string
             format: date-time
         - name: end_time
           in: query
-          description: end time of calendar. if not exist, last day of month will be considered.
+          description: >-
+            end time of calendar. if not exist, last day of month will be
+            considered.
           schema:
             type: string
             format: date-time
@@ -252,7 +262,7 @@ paths:
                     date:
                       type: string
                       format: date-time
-                      example: 2023-09-21T00:00:00.000000+03:30
+                      example: '2023-09-21T00:00:00.000000+03:30'
                     slots:
                       type: array
                       items:
@@ -261,10 +271,9 @@ paths:
                           time:
                             type: string
                             format: date-time
-                            example: 2023-09-21T10:00:00.000000+03:30
+                            example: '2023-09-21T10:00:00.000000+03:30'
         '404':
           $ref: '#/components/responses/404'
-
       tags:
         - Availability
   /v1/providers-specialities:
@@ -304,7 +313,6 @@ paths:
                   $ref: '#/components/schemas/academic_degree/properties/id'
                 speciality_id:
                   $ref: '#/components/schemas/speciality/properties/id'
-
       responses:
         '204':
           $ref: '#/components/responses/204'
@@ -332,7 +340,6 @@ paths:
                   $ref: '#/components/schemas/academic_degree/properties/id'
                 speciality_id:
                   $ref: '#/components/schemas/speciality/properties/id'
-
       responses:
         '204':
           $ref: '#/components/responses/204'
@@ -386,9 +393,8 @@ paths:
             $ref: '#/components/schemas/user/properties/id'
           in: path
           required: true
-
       responses:
-        200:
+        '200':
           description: Get user information
           content:
             application/json:
@@ -412,7 +418,6 @@ paths:
             $ref: '#/components/schemas/user/properties/id'
           in: path
           required: true
-
       requestBody:
         content:
           application/json:
@@ -424,18 +429,18 @@ paths:
                 family:
                   $ref: '#/components/schemas/authenticated_user/properties/family'
                 national_code:
-                  $ref: '#/components/schemas/authenticated_user/properties/national_code'
+                  $ref: >-
+                    #/components/schemas/authenticated_user/properties/national_code
                 cell:
                   allOf:
                     - $ref: '#/components/schemas/authenticated_user/properties/cell'
                   description: user new cell should be sent along with otp
                 otp:
-                    example: "4556"
-                    type: string
-                    description: The otp sent to the user new cell.
-
+                  example: '4556'
+                  type: string
+                  description: The otp sent to the user new cell.
       responses:
-        200:
+        '200':
           description: Get Authenticated user information
           content:
             application/json:
@@ -447,8 +452,6 @@ paths:
                       $ref: '#/components/schemas/authenticated_user'
       tags:
         - Users
-
-
   /v1/users/{id}/otp:
     patch:
       summary: send otp to verify user new cell
@@ -462,7 +465,6 @@ paths:
             $ref: '#/components/schemas/user/properties/id'
           in: path
           required: true
-
       requestBody:
         content:
           application/json:
@@ -473,14 +475,11 @@ paths:
                   allOf:
                     - $ref: '#/components/schemas/authenticated_user/properties/cell'
                     - description: user new cell
-
-
       responses:
-        200:
+        '200':
           description: otp sent to new user cell successfuly
       tags:
         - Users
-
   /v1/auth/me:
     summary: fetch authenticated user record
     get:
@@ -489,9 +488,8 @@ paths:
       operationId: getAuthenticatedUser
       security:
         - BearerAuth: []
-
       responses:
-        200:
+        '200':
           description: Get Authenticated user information
           content:
             application/json:
@@ -508,29 +506,25 @@ paths:
     get:
       summary: send new password to user cell
       description: ''
-      operationId: resendPassword  
+      operationId: resendPassword
       parameters:
         - name: mobile
           schema:
             nullable: false
             description: mobile number of the user
-            example: "913000000"
+            example: '913000000'
             type: string
           in: query
-
       responses:
-        200:
+        '200':
           description: new Password sent succecfully
-
       tags:
         - Auth
-        
   /v1/auth/login:
     post:
       summary: authenticate user by username and password
       description: ''
-      operationId: LoginUser 
-
+      operationId: LoginUser
       requestBody:
         content:
           application/json:
@@ -539,25 +533,25 @@ paths:
               properties:
                 username:
                   allOf:
-                     - nullable: false
-                     - description: username of the user
-                     - example: "913000000"
-                     - type: string
+                    - nullable: false
+                    - description: username of the user
+                    - example: '913000000'
+                    - type: string
                 password:
                   allOf:
-                     - nullable: false
-                     - description: password of the user
-                     - example: "4552"
-                     - type: string
+                    - nullable: false
+                    - description: password of the user
+                    - example: '4552'
+                    - type: string
       responses:
-        200:
+        '200':
           description: sucess authentication response
           content:
             application/json:
               schema:
-                 $ref: '#/components/schemas/success_authentication'
+                $ref: '#/components/schemas/success_authentication'
       tags:
-        - Auth  
+        - Auth
   /v1/auth/refresh:
     post:
       summary: refresh expired authentication token
@@ -565,14 +559,63 @@ paths:
       security:
         - BearerAuth: []
       responses:
-        200:
+        '200':
           description: success refresh response
           content:
             application/json:
               schema:
-                 $ref: '#/components/schemas/success_authentication'                 
+                $ref: '#/components/schemas/success_authentication'
       tags:
-        - Auth   
+        - Auth
+  /v1/reserve:
+    post:
+      summary: Reserve a time slot for 5 minutes
+      description: ''
+      operationId: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                membership_id:
+                  $ref: '#/components/schemas/membership/properties/id'
+                service_id:
+                  $ref: '#/components/schemas/service/properties/id'
+                time:
+                  type: string
+                  format: date-time
+              required:
+                - membership_id
+                - service_id
+                - time
+      responses:
+        '200':
+          description: Time slot reserved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reserve'
+        '409':
+          $ref: '#/components/responses/409'
+      tags:
+        - Availability
+  /v1/reserve/{reserve_id}:
+    delete:
+      summary: Remove reservation of slot
+      description: ''
+      operationId: ''
+      parameters:
+        - name: reserve_id
+          in: path
+          schema:
+            $ref: '#/components/schemas/reserve/properties/id'
+          required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+      tags:
+        - Availability
 tags:
   - name: Providers
   - name: Users
@@ -604,19 +647,20 @@ components:
           example: Mohammadian
           type: string
     success_authentication:
-        properties:
-            access_token:
-              description: token of the authenticated user
-              example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2RvY3RvcnMtYXBpLnBhemlyZXNoMjQuY29tL1YxL2F1dGgvbG9naW4iLCJpYXQiOjE2OTY0MDA0MTIsImV4cCI6MTY5NzYxMDAxMiwibmJmIjoxNjk2NDAwNDEyLCJqdGkiOiJTUE1tVlhJNVNxQ2NCV1haIiwic3ViIjoiMTI0OTg5NzUiLCJuYW1lIjoi2KrYs9iqIiwiZmFtaWx5Ijoi2KrYs9iqIiwiZ2VuZGVyIjoibWFsZSIsInJvbGUiOiJ1c2VyIn0.zGHVD4MgJePIssjfGQWhG1AwBRefSVPUHecXF8WYpq0"
-              type: string
-            token_type: 
-              description: type of the token
-              example: "bearer"
-              type: string
-            expires_in:
-              description: token expire duration
-              example: 1209600
-              type: integer
+      properties:
+        access_token:
+          description: token of the authenticated user
+          example: >-
+            eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2RvY3RvcnMtYXBpLnBhemlyZXNoMjQuY29tL1YxL2F1dGgvbG9naW4iLCJpYXQiOjE2OTY0MDA0MTIsImV4cCI6MTY5NzYxMDAxMiwibmJmIjoxNjk2NDAwNDEyLCJqdGkiOiJTUE1tVlhJNVNxQ2NCV1haIiwic3ViIjoiMTI0OTg5NzUiLCJuYW1lIjoi2KrYs9iqIiwiZmFtaWx5Ijoi2KrYs9iqIiwiZ2VuZGVyIjoibWFsZSIsInJvbGUiOiJ1c2VyIn0.zGHVD4MgJePIssjfGQWhG1AwBRefSVPUHecXF8WYpq0
+          type: string
+        token_type:
+          description: type of the token
+          example: bearer
+          type: string
+        expires_in:
+          description: token expire duration
+          example: 1209600
+          type: integer
     authenticated_user:
       description: authenticated user information
       properties:
@@ -624,24 +668,18 @@ components:
           $ref: '#/components/schemas/user/properties/id'
         name:
           $ref: '#/components/schemas/user/properties/name'
-
         family:
           $ref: '#/components/schemas/user/properties/family'
         cell:
           nullable: true
           description: cell of the user
-          example: "913000000"
+          example: '913000000'
           type: string
         national_code:
           nullable: true
           description: national_code of the user
-          example: "124666554"
+          example: '124666554'
           type: string
-
-
-
-
-
     sub_user:
       description: user subset information
       properties:
@@ -704,18 +742,16 @@ components:
           nullable: true
           description: this refers to an alias title which was chosen by the provider
           type: string
-          example: "فوق تخصص حلق و گوش"
+          example: فوق تخصص حلق و گوش
         speciality:
           $ref: '#/components/schemas/speciality'
         academic_degree:
           $ref: '#/components/schemas/academic_degree'
-
     specialities_tags:
       description: tags of speciality
       properties:
         tag:
           $ref: '#/components/schemas/tag'
-
     tag:
       properties:
         id:
@@ -728,10 +764,10 @@ components:
           title: Title of tag
           type: string
           example: خون، سرطان و انکولوژی'
-
     speciality:
       description: >-
-        Specialities which are supported and providers can choose from them, for example:  بهداشت روان، بیوشیمی بالینی
+        Specialities which are supported and providers can choose from them, for
+        example:  بهداشت روان، بیوشیمی بالینی
       properties:
         id:
           nullable: false
@@ -745,7 +781,8 @@ components:
           example: بهداشت روان
     academic_degree:
       description: >-
-        Academic degree which are supported and providers can choose from them, for example: کارشناس، متخصص
+        Academic degree which are supported and providers can choose from them,
+        for example: کارشناس، متخصص
       properties:
         id:
           nullable: false
@@ -810,8 +847,17 @@ components:
           format: date-time
         has_payment:
           type: boolean
-
-
+    reserve:
+      description: Reserved slot information
+      properties:
+        id:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
     timezone:
       type: string
       enum:
@@ -826,26 +872,25 @@ components:
     '404':
       description: Resource not found
       content:
-            application/json:
-              schema:
-                properties:
-                  status:
-                    type: string
-                    example: FAILED
-                  message:
-                    type: string
+        application/json:
+          schema:
+            properties:
+              status:
+                type: string
+                example: FAILED
+              message:
+                type: string
     '409':
-      description: Resource not found
+      description: There is a conflict
       content:
-            application/json:
-              schema:
-                properties:
-                  status:
-                    type: string
-                    example: FAILED
-                  message:
-                    type: string
-
+        application/json:
+          schema:
+            properties:
+              status:
+                type: string
+                example: FAILED
+              message:
+                type: string
   securitySchemes:
     BearerAuth:
       type: http
