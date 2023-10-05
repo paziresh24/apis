@@ -611,6 +611,11 @@ paths:
           schema:
             $ref: '#/components/schemas/reserve/properties/id'
           required: true
+        - name: membership_id
+          in: query
+          schema:
+            $ref: '#/components/schemas/membership/properties/id'
+          required: true
       responses:
         '204':
           $ref: '#/components/responses/204'
