@@ -83,9 +83,9 @@ paths:
       description: ''
       operationId: getMembershipInfo
       parameters:
-        - name: user_id
+        - name: provider_id
           schema:
-            $ref: '#/components/schemas/user/properties/id'
+            $ref: '#/components/schemas/provider/properties/id'
           in: query
       responses:
         '200':
@@ -112,13 +112,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/membership'
+              type: object
+              properties:
+                provider_id:
+                  $ref: '#/components/schemas/membership/properties/provider_id'
+                center_id:
+                  $ref: '#/components/schemas/membership/properties/center_id'
+                booking_link:
+                  $ref: '#/components/schemas/membership/properties/booking_link'
       responses:
         '201':
           $ref: '#/components/responses/201'
       tags:
         - Memberships
-  /v1/memberships/{center_id}/{user_id}:
+  /v1/memberships/{id}:
     summary: remove a membership
     delete:
       description: >-
@@ -129,15 +136,10 @@ paths:
         - BearerAuth:
             - center_admin
       parameters:
-        - name: user_id
+        - name: id
           in: path
           schema:
-            $ref: '#/components/schemas/user/properties/id'
-          required: true
-        - name: center_id
-          in: path
-          schema:
-            $ref: '#/components/schemas/membership/properties/center_id'
+            $ref: '#/components/schemas/membership/properties/id'
           required: true
       responses:
         '204':
@@ -806,8 +808,8 @@ components:
           description: Member identifier
           example: 1
           type: integer
-        user_id:
-          $ref: '#/components/schemas/user/properties/id'
+        provider_id:
+          $ref: '#/components/schemas/provider/properties/id'
         center_id:
           description: Identifier of center (facilities that providers work on)
           example: 9876
