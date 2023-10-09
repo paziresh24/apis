@@ -76,6 +76,23 @@ paths:
           $ref: '#/components/responses/201'
       tags:
         - Providers
+  /v1/providers/{id}/increment-page-view:
+        patch:
+          summary: Increment provider page view count
+          description: ''
+          operationId: updateProviderPageView
+          parameters:
+            - name: id
+              in: path
+              schema:
+                $ref: '#/components/schemas/provider/properties/id'
+              required: true
+          responses:
+            '200':
+                description: provider page view incremented successfuly
+
+          tags:
+            - Providers
   /v1/memberships:
     summary: Relational record between users and centers
     get:
@@ -786,6 +803,11 @@ components:
             https://paziresh24.com/dr/دکتر-محمدی)
           type: string
           example: دکتر
+        page_view:
+          nullable: false
+          title: page view
+          type: integer
+          example: 15
     provider_speciality:
       description: Specialities of a provider
       properties:
