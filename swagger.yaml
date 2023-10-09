@@ -197,7 +197,8 @@ paths:
                   allOf:
                     - $ref: '#/components/schemas/sub_user/properties/id'
                     - description: >-
-                        if sub user is present, the book will be set for sub user.
+                        if sub user is present, the book will be set for sub
+                        user.
               required:
                 - membership_id
                 - service_id
@@ -212,7 +213,6 @@ paths:
           $ref: '#/components/responses/409'
       tags:
         - Appointments
-
   /v1/availability:
     summary: Available slots
     get:
@@ -623,6 +623,52 @@ paths:
           $ref: '#/components/responses/204'
       tags:
         - Availability
+  /v1/appointments/{id}:
+    patch:
+      summary: Update an appointment info
+      security:
+        - BearerAuth: []
+      description: ''
+      operationId: ''
+      parameters:
+        - name: id
+          in: path
+          schema:
+            $ref: '#/components/schemas/appointment/properties/id'
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_time:
+                  $ref: '#/components/schemas/appointment/properties/start_time'
+                end_time:
+                  $ref: '#/components/schemas/appointment/properties/end_time'
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Appointments
+    delete:
+      summary: Delete an appointment
+      security:
+        - BearerAuth: []
+      description: ''
+      operationId: ''
+      parameters:
+        - name: id
+          in: path
+          schema:
+            $ref: '#/components/schemas/appointment/properties/id'
+          required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+      tags:
+        - Appointments
+
 tags:
   - name: Providers
   - name: Users
