@@ -647,8 +647,12 @@ paths:
                 end_time:
                   $ref: '#/components/schemas/appointment/properties/end_time'
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: Appointment submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appointment'
       tags:
         - Appointments
     delete:
@@ -898,7 +902,7 @@ components:
         end_time:
           type: string
           format: date-time
-        has_payment:
+        need_payment:
           type: boolean
     reserve:
       description: Reserved slot information
