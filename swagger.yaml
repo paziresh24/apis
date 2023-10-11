@@ -663,6 +663,12 @@ paths:
                   $ref: '#/components/schemas/appointment/properties/start_time'
                 end_time:
                   $ref: '#/components/schemas/appointment/properties/end_time'
+                payment_status:
+                  $ref: '#/components/schemas/payment_status'
+                paziresh_status:
+                  $ref: '#/components/schemas/paziresh_status'
+                visit_status:
+                  $ref: '#/components/schemas/visit_status'
       responses:
         '200':
           description: Appointment submitted successfully
@@ -943,6 +949,27 @@ components:
         - Asia/Tehran
         - America/Chicago
         - ...
+    payment_status:
+      type: string
+      enum:
+        - not_paid
+        - in_progress
+        - paid
+        - refunded
+        - refund_queue
+        - refund_error
+        - refund_request
+        - refund_reject
+    paziresh_status:
+      type: string
+      enum:
+        - not_accepted
+        - accepted
+    visit_status:
+      type: string
+      enum:
+        - not_visited
+        - visited
   responses:
     '201':
       description: Record inserted successfully
