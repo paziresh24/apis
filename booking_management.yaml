@@ -18,6 +18,19 @@ paths:
       summary: Get key to use management apis
       description: ''
       operationId: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
       responses:
         default:
           description: Default error sample response
