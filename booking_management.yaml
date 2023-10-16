@@ -1,0 +1,106 @@
+openapi: 3.0.0
+info:
+  title: Paziresh24 booking management
+  version: '1.0'
+  description: Management system for doctors or facilities.
+  termsOfService: https://www.paziresh24.com/home/rules/
+  contact:
+    email: info@paziresh24.com
+    name: paziresh24
+    url: https://www.paziresh24.com
+servers:
+  - url: https://apigw.paziresh24.com/booking-management
+    variables: {}
+paths:
+  /v1/login:
+    summary: Get key to use management booking apis
+    post:
+      summary: Get key to use management apis
+      description: ''
+      operationId: ''
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Auth
+  /v1/appointments:
+    get:
+      summary: get list of appointments
+      description: ''
+      operationId: ''
+      security:
+        - ApiKey: []
+      parameters:
+        - name: date_start
+          in: query
+          schema:
+            type: string
+            format: jalali date
+        - name: date_end
+          in: query
+          schema:
+            type: string
+            format: jalali date
+        - name: medical_code
+          in: query
+          schema:
+            type: string
+        - name: user_center_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: center_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of books
+      tags:
+        - Appointment
+  /v1/appoitments/{id}:
+    summary: work with specific appointment
+    get:
+      summary: get specific appointment
+      description: ''
+      operationId: ''
+      security:
+        - ApiKey: []
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        '200':
+          description: Founded appointment
+      tags:
+        - Appointment
+    delete:
+      summary: delete an appointment
+      description: ''
+      operationId: ''
+      security:
+        - ApiKey: []
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        '204':
+          description: when the appointment deletes successfully
+      tags:
+        - Appointment
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
