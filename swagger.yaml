@@ -695,7 +695,25 @@ paths:
           $ref: '#/components/responses/204'
       tags:
         - Appointments
-
+  /v1/feedbacks/{id}:
+    get:
+      summary: Retrieve feedback by ID
+      description: Returns a single feedback based on the provided ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of the feedback to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feedback'
 tags:
   - name: Providers
   - name: Users
@@ -970,6 +988,39 @@ components:
       enum:
         - not_visited
         - visited
+    Feedback:
+      type: object
+      properties:
+        post_stream:
+          type: object
+          properties:
+            posts:
+              type: array
+              items:
+                $ref: '#/components/schemas/Post'
+            stream:
+              type: array
+              items:
+                type: integer
+        #... Additional properties based on the provided JSON can be added here ...
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+        avatar_template:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        cooked:
+          type: string
+        #... Additional properties for each post based on the provided JSON ...
+
   responses:
     '201':
       description: Record inserted successfully
