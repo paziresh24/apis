@@ -400,6 +400,51 @@ paths:
                       $ref: '#/components/schemas/specialities_tags'
       tags:
         - SpecialitiesTags
+  /v1/users:
+    post:
+      summary: insert new user
+      description: ''
+      operationId: inserUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  $ref: '#/components/schemas/user/properties/id'
+                name:
+                  $ref: '#/components/schemas/authenticated_user/properties/name'
+                family:
+                  $ref: '#/components/schemas/authenticated_user/properties/family'
+                national_code:
+                  $ref: >-
+                    #/components/schemas/authenticated_user/properties/national_code
+                cell:
+                  allOf:
+                    - $ref: '#/components/schemas/authenticated_user/properties/cell'
+                city_id:
+                  $ref: >-
+                    #/components/schemas/city/properties/id
+                province_id:
+                  $ref: >-
+                    #/components/schemas/province/properties/id
+                gender:
+                  $ref: >-
+                    #/components/schemas/authenticated_user/properties/gender
+      responses:
+        '200':
+          description: Get Inserted user information
+          content:
+            application/json:
+              schema:
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/authenticated_user'
+      tags:
+        - Users
   /v1/users/{id}:
     summary: users information
     get:
@@ -458,6 +503,15 @@ paths:
                   example: '4556'
                   type: string
                   description: The otp sent to the user new cell.
+                city_id:
+                  $ref: >-
+                    #/components/schemas/city/properties/id
+                province_id:
+                  $ref: >-
+                    #/components/schemas/province/properties/id
+                gender:
+                  $ref: >-
+                    #/components/schemas/authenticated_user/properties/gender
       responses:
         '200':
           description: Get Authenticated user information
@@ -746,6 +800,18 @@ components:
           description: Family of the user
           example: Mohammadian
           type: string
+        gender:
+          nullable: true
+          description: Gender of the user
+          example: male
+          type: string
+          enum:
+            - male
+            - female
+        city:
+          $ref: '#/components/schemas/city'
+        province:
+          $ref: '#/components/schemas/province'
     success_authentication:
       properties:
         access_token:
@@ -770,6 +836,12 @@ components:
           $ref: '#/components/schemas/user/properties/name'
         family:
           $ref: '#/components/schemas/user/properties/family'
+        gender:
+           $ref: '#/components/schemas/user/properties/gender'
+        city:
+           $ref: '#/components/schemas/user/properties/city'
+        province:
+           $ref: '#/components/schemas/user/properties/province'  
         cell:
           nullable: true
           description: cell of the user
@@ -780,6 +852,53 @@ components:
           description: national_code of the user
           example: '124666554'
           type: string
+    city:
+      description: city properties
+      properties:
+        name:
+          nullable: true
+          description: name of the city
+          example: 'یزد'
+          type: string
+        en_slug:
+          nullable: true
+          description: english slug of the city
+          example: 'yazd'
+          type: string
+        id:
+          nullable: true
+          description: id of the city
+          example: 426
+          type: integer
+        province_id:
+          nullable: true
+          description: province id  of the city
+          example: 31
+          type: integer
+        is_capital:
+          nullable: true
+          description: check city is capital or not
+          example: true
+          type: boolean
+    province:
+      description: province properties
+      properties:
+        name:
+          nullable: true
+          description: name of the province
+          example: 'یزد'
+          type: string
+        en_slug:
+          nullable: true
+          description: english slug of the province
+          example: 'yazd'
+          type: string
+        id:
+          nullable: true
+          description: id of the province
+          example: 31
+          type: integer
+        
     sub_user:
       description: user subset information
       properties:
