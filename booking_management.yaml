@@ -55,12 +55,12 @@ paths:
           in: query
           schema:
             type: string
-            format: date_time
+            format: date-time
         - name: date_end
           in: query
           schema:
             type: string
-            format: date_time
+            format: date-time
         - name: medical_code
           in: query
           schema:
