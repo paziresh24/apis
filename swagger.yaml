@@ -10,7 +10,7 @@ info:
     url: https://www.paziresh24.com
 servers:
   - url: https://apigw.paziresh24.com
-    variables: {}
+    variables: { }
 paths:
   /v1/providers:
     get:
@@ -193,7 +193,7 @@ paths:
       description: ''
       operationId: ''
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       requestBody:
         content:
           application/json:
@@ -430,7 +430,7 @@ paths:
       description: ''
       operationId: updateUser
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       parameters:
         - name: id
           schema:
@@ -477,7 +477,7 @@ paths:
       description: ''
       operationId: userCellOtp
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       parameters:
         - name: id
           schema:
@@ -506,7 +506,7 @@ paths:
       description: ''
       operationId: getAuthenticatedUser
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       responses:
         '200':
           description: Get Authenticated user information
@@ -576,7 +576,7 @@ paths:
       summary: refresh expired authentication token
       operationId: RefreshToken
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       responses:
         '200':
           description: success refresh response
@@ -644,7 +644,7 @@ paths:
     patch:
       summary: Update an appointment info
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: ''
       operationId: ''
       parameters:
@@ -681,7 +681,7 @@ paths:
     delete:
       summary: Delete an appointment
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: ''
       operationId: ''
       parameters:
@@ -714,6 +714,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Feedback'
+      tags:
+        - Feedbacks
 tags:
   - name: Providers
   - name: Users
