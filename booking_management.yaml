@@ -32,8 +32,15 @@ paths:
                 - username
                 - password
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: when api key generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
       tags:
         - Auth
   /v1/appointments:
@@ -48,12 +55,12 @@ paths:
           in: query
           schema:
             type: string
-            format: jalali date
+            format: date_time
         - name: date_end
           in: query
           schema:
             type: string
-            format: jalali date
+            format: date_time
         - name: medical_code
           in: query
           schema:
@@ -71,31 +78,19 @@ paths:
       responses:
         '200':
           description: List of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/appointment'
       tags:
         - Appointment
   /v1/appoitments/{id}:
     summary: work with specific appointment
-    get:
-      summary: get specific appointment
-      description: ''
-      operationId: ''
-      security:
-        - ApiKey: []
-      parameters:
-        - name: id
-          in: path
-          schema:
-            type: string
-            format: uuid
-          required: true
-      responses:
-        '200':
-          description: Founded appointment
-      tags:
-        - Appointment
     delete:
       summary: delete an appointment
-      description: ''
+      description: 'NOT IMPLEMENTED YET'
       operationId: ''
       security:
         - ApiKey: []
@@ -112,6 +107,90 @@ paths:
       tags:
         - Appointment
 components:
+  schemas:
+    appointment:
+      description: an appointment info
+      properties:
+        id:
+          type: string
+          format: uuid
+        from:
+          type: integer
+          example: 1695094200
+        to:
+          type: integer
+          example: 1695094200
+        from_iso:
+          type: string
+          format: date-time
+        to_iso:
+          type: string
+          format: date-time
+        book_register:
+          type: integer
+          example: 1695094200
+        reference_code:
+          type: string
+          example: 1695022717484
+        book_status:
+          type: integer
+          example: 1
+        paziresh_status:
+          type: integer
+          example: 1
+        payment_status:
+          type: integer
+          example: 1
+        patient:
+          $ref: '#/components/schemas/patient'
+        doctor:
+          $ref: '#/components/schemas/doctor'
+        center:
+          $ref: '#/components/schemas/center'
+
+    patient:
+      description: patient info
+      properties:
+        name:
+          type: string
+          example: علی
+        family:
+          type: string
+          example: صدر
+        cell:
+          type: string
+          example: 913456789
+        national_code:
+          type: string
+          example: 1234567890
+    doctor:
+      description: doctor info
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: علیرضا
+        family:
+          type: string
+          example: صدر
+        medical_code:
+          type: string
+          example: 153815
+        user_center_id:
+          type: string
+          format: uuid
+    center:
+      description: center info
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        address:
+          type: string
   securitySchemes:
     ApiKey:
       type: apiKey
