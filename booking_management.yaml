@@ -90,7 +90,7 @@ paths:
     summary: work with specific appointment
     delete:
       summary: delete an appointment
-      description: 'NOT IMPLEMENTED YET'
+      description: ''
       operationId: ''
       security:
         - ApiKey: []
