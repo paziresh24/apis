@@ -843,11 +843,11 @@ components:
         family:
           $ref: '#/components/schemas/user/properties/family'
         gender:
-           $ref: '#/components/schemas/user/properties/gender'
+          $ref: '#/components/schemas/user/properties/gender'
         city:
-           $ref: '#/components/schemas/user/properties/city'
+          $ref: '#/components/schemas/user/properties/city'
         province:
-           $ref: '#/components/schemas/user/properties/province'  
+          $ref: '#/components/schemas/user/properties/province'
         cell:
           nullable: true
           description: cell of the user
@@ -904,7 +904,7 @@ components:
           description: id of the province
           example: 31
           type: integer
-        
+
     sub_user:
       description: user subset information
       properties:
