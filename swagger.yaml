@@ -697,7 +697,7 @@ paths:
         - Appointments
   /v1/feedbacks/{id}:
     get:
-      summary: Retrieve feedback by ID
+      summary: Retrieve feedback by ID that you provide it
       description: Returns a single feedback based on the provided ID
       parameters:
         - name: id
@@ -708,12 +708,18 @@ paths:
             type: integer
             format: int64
       responses:
-        200:
+        '200':
           description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Feedback'
+        '404':
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/404'
       tags:
         - Feedbacks
 tags:
@@ -993,19 +999,17 @@ components:
     Feedback:
       type: object
       properties:
-        post_stream:
-          type: object
-          properties:
-            posts:
-              type: array
-              items:
-                $ref: '#/components/schemas/Post'
-            stream:
-              type: array
-              items:
-                type: integer
-        #... Additional properties based on the provided JSON can be added here ...
-    Post:
+        id:
+          type: integer
+        title:
+          type: string
+        external_id:
+          type: string
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+    Comment:
       type: object
       properties:
         id:
@@ -1014,14 +1018,16 @@ components:
           type: string
         username:
           type: string
-        avatar_template:
-          type: string
+        comment_number:
+          type: integer
+        reply_count:
+          type: integer
         created_at:
           type: string
           format: date-time
-        cooked:
+        updated_at:
           type: string
-        #... Additional properties for each post based on the provided JSON ...
+          format: date-time
 
   responses:
     '201':
