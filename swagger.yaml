@@ -89,7 +89,7 @@ paths:
           required: true
       responses:
         '200':
-          description: provider page view incremented successfuly
+          description: provider page view incremented successfully
 
       tags:
         - Providers
@@ -775,6 +775,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/404'
+      tags:
+        - Feedbacks
+    post:
+      summary: Submit feedback
+      description: Provide feedback for review.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: "Your feedback description here."
+                external_id:
+                  type: string
+                  example: "your external identity"
+      responses:
+        '200':
+          description: Feedback submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  action:
+                    type: string
+                  success:
+                    type: boolean
+                example:
+                  action: "enqueued"
+                  success: true
       tags:
         - Feedbacks
 tags:
