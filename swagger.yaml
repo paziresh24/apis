@@ -811,9 +811,9 @@ paths:
       tags:
         - Feedbacks
   /feedbacks/{id}:
-    patch:
+    put:
       summary: Update feedback
-      description: Update a feedback's description by its ID.
+      description: Update a feedback by its ID.
       parameters:
         - in: path
           name: id
