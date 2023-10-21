@@ -810,6 +810,43 @@ paths:
                   success: true
       tags:
         - Feedbacks
+  /feedbacks/{id}:
+    patch:
+      summary: Update feedback
+      description: Update a feedback's description by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the feedback to be updated.
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: "new description"
+      responses:
+        '200':
+          description: Feedback updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  action:
+                    type: string
+                  success:
+                    type: boolean
+                example:
+                  action: "enqueued"
+                  success: true
+
 tags:
   - name: Providers
   - name: Users
