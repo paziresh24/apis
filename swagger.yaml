@@ -788,8 +788,7 @@ paths:
               type: object
               properties:
                 description:
-                  type: string
-                  example: "Your feedback description here."
+                  $ref: '#/components/schemas/Feedback/properties/description'
                 external_id:
                   type: string
                   example: "your external identity"
@@ -811,9 +810,9 @@ paths:
       tags:
         - Feedbacks
   /feedbacks/{id}:
-    put:
-      summary: Update feedback
-      description: Update a feedback by its ID.
+    patch:
+      summary: Update feedback description
+      description: Update description of feedback by its ID.
       parameters:
         - in: path
           name: id
@@ -829,8 +828,7 @@ paths:
               type: object
               properties:
                 description:
-                  type: string
-                  example: "new description"
+                  $ref: '#/components/schemas/Feedback/properties/description'
       responses:
         '200':
           description: Feedback updated successfully
@@ -1222,11 +1220,14 @@ components:
           example: 75
         name:
           type: string
-          example: "فرهاد خاموشی"
-        username:
+          example: "user's name"
+        user_id:
           type: string
-          example: "10692148"
-        comment_number:
+          example: "123456789"
+        description:
+          type: string
+          example: "Your feedback description here."
+        feedback_number:
           type: integer
           example: 2
         reply_count:
