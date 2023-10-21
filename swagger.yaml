@@ -848,6 +848,33 @@ paths:
                   success: true
       tags:
         - Feedbacks
+    delete:
+      summary: Delete feedback
+      description: Remove a feedback by its ID.
+      tags:
+        - Feedbacks
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the feedback to be deleted.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Feedback deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                example:
+                  status: "SUCCESS"
+                  message: "درخواست شما با موفقیت پردازش شد"
 tags:
   - name: Providers
   - name: Users
