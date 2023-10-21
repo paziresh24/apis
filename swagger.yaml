@@ -846,7 +846,8 @@ paths:
                 example:
                   action: "enqueued"
                   success: true
-
+      tags:
+        - Feedbacks
 tags:
   - name: Providers
   - name: Users
