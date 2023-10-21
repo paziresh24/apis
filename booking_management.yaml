@@ -20,7 +20,7 @@ paths:
       operationId: ''
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -39,8 +39,11 @@ paths:
               schema:
                 type: object
                 properties:
-                  key:
-                    type: string
+                  result:
+                    type: object
+                    properties:
+                      certificate:
+                        type: string
       tags:
         - Auth
   /v1/appointments:
