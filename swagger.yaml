@@ -770,7 +770,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Feedback'
         '404':
-          description: Failed operation
+          description: Not Found Operation
           content:
             application/json:
               schema:
@@ -1153,6 +1153,7 @@ components:
       content:
         application/json:
           schema:
+            type: object
             properties:
               status:
                 type: string
