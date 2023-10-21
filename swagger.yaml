@@ -749,25 +749,26 @@ paths:
           $ref: '#/components/responses/204'
       tags:
         - Appointments
-  /v1/feedbacks/{id}:
+  /v1/feedbacks:
     get:
-      summary: Retrieve feedback by ID that you provide it
-      description: Returns a single feedback based on the provided ID
+      summary: Retrieve feedbacks by ID that you provide it
+      description: Returns a list of feedbacks based on the provided ID
       parameters:
-        - name: id
-          in: path
-          description: ID of the feedback to retrieve
+        - in: query
+          name: external_id
           required: true
+          description: The external ID for the feedback.
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Feedback'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Feedback'
         '404':
           description: Failed operation
           content:
@@ -1120,33 +1121,27 @@ components:
       properties:
         id:
           type: integer
-        title:
-          type: string
-        external_id:
-          type: string
-        comments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Comment'
-    Comment:
-      type: object
-      properties:
-        id:
-          type: integer
+          example: 75
         name:
           type: string
+          example: "فرهاد خاموشی"
         username:
           type: string
+          example: "10692148"
         comment_number:
           type: integer
+          example: 2
         reply_count:
           type: integer
+          example: 0
         created_at:
           type: string
           format: date-time
+          example: "2023-10-18T09:57:37.991Z"
         updated_at:
           type: string
           format: date-time
+          example: "2023-10-18T09:57:37.991Z"
 
   responses:
     '201':
