@@ -723,6 +723,17 @@ paths:
                   $ref: '#/components/schemas/paziresh_status'
                 visit_status:
                   $ref: '#/components/schemas/visit_status'
+                attendee:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    family:
+                      type: string
+                    cell:
+                      type: string
+                    national_code:
+                      type: string
       responses:
         '200':
           description: Appointment submitted successfully
