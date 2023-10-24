@@ -886,6 +886,68 @@ paths:
                 example:
                   status: "SUCCESS"
                   message: "درخواست شما با موفقیت پردازش شد"
+  /v1/search:
+    get:
+      summary: Search for something
+      description: Search for something based on text, center, result type, and expertise.
+      tags:
+        - Search
+      parameters:
+        - name: text
+          in: query
+          description: The text to search for.
+          required: true
+          schema:
+            type: string
+        - name: center
+          in: query
+          description: The center for the search.
+          required: false
+          schema:
+            type: integer
+        - name: result_type
+          in: query
+          description: The result type for the search.
+          required: false
+          schema:
+            type: string
+            enum:
+              - فقط پزشکان
+              # Add more enum values as needed
+        - name: expertise
+          in: query
+          description: The expertise for the search.
+          required: false
+          schema:
+            type: string
+            enum:
+              - internal-diseases
+              # Add more enum values as needed
+      responses:
+        '200':
+          description: Successful search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  search:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      pagination:
+                        type: object
+                        properties:
+                          limit:
+                            type: integer
+                          page:
+                            type: integer
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Center'
+
 tags:
   - name: Providers
   - name: Users
@@ -1254,6 +1316,27 @@ components:
           type: string
           format: date-time
           example: "2023-10-18T09:57:37.991Z"
+    Center:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the center.
+        name:
+          type: string
+          description: The name of the center.
+        display_number:
+          type: string
+          description: Display number (if applicable).
+        address:
+          type: string
+          description: The address of the center.
+        province_name:
+          type: string
+          description: The name of the province where the center is located.
+        city_name:
+          type: string
+          description: The name of the city where the center is located.
 
   responses:
     '201':
