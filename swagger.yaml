@@ -936,7 +936,7 @@ paths:
             type: string
         - name: center
           in: query
-          description: The center for the search.
+          description: The center id for the search.
           required: false
           schema:
             type: integer
