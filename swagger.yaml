@@ -760,6 +760,37 @@ paths:
           $ref: '#/components/responses/204'
       tags:
         - Appointments
+  /v1/feedbacks/average-waiting-time:
+    get:
+      tags:
+        - "Feedbacks"
+      summary: "Get the average waiting time for a specific center."
+      description: "Retrieve the average waiting time for a given center based on the provided slug."
+      operationId: "getAverageWaitingTime"
+      parameters:
+        - name: "slug"
+          in: "query"
+          required: true
+          description: "The slug representing."
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: "Successfully retrieved average waiting time."
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: "string"
+                    example: "SUCCESS"
+                  message:
+                    type: "string"
+                    example: "درخواست شما با موفقیت پردازش شد"
+                  result:
+                    type: "array"
+                    items:
+                      $ref: "#/components/schemas/WaitingTimeInfo"
   /v1/feedbacks:
     get:
       summary: Retrieve feedbacks by ID that you provide it
@@ -1287,6 +1318,21 @@ components:
       enum:
         - not_visited
         - visited
+    WaitingTimeInfo:
+      type: "object"
+      properties:
+        center_id:
+          type: "string"
+          example: "5532"
+        waiting_time:
+          type: "string"
+          example: "0.5429"
+        waiting_time_count:
+          type: "integer"
+          example: 35
+        waiting_time_title:
+          type: "string"
+          example: "کمتر از یک ساعت"
     Feedback:
       type: object
       properties:
