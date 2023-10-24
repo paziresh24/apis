@@ -723,6 +723,10 @@ paths:
                   $ref: '#/components/schemas/paziresh_status'
                 visit_status:
                   $ref: '#/components/schemas/visit_status'
+                membership_id:
+                  allOf:
+                    - $ref: '#/components/schemas/membership/properties/id'
+                    - description: if the doctor is changed
                 attendee:
                   type: object
                   properties:
