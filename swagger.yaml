@@ -931,12 +931,12 @@ paths:
         - name: text
           in: query
           description: The text to search for.
-          required: true
+          required: false
           schema:
             type: string
         - name: center
           in: query
-          description: The center for the search.
+          description: The center id for the search.
           required: false
           schema:
             type: integer
@@ -969,15 +969,9 @@ paths:
                   search:
                     type: object
                     properties:
-                      query_id:
-                        type: string
-                        example: "3A72C8AA15876717"
                       total:
                         type: integer
                         example: 6
-                      is_landing:
-                        type: boolean
-                        example: false
                       pagination:
                         type: object
                         properties:
@@ -991,28 +985,6 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/SearchResult'
-                  order_items:
-                    type: object
-                  categories:
-                    type: array
-                    items:
-                      type: object
-                  filters:
-                    type: array
-                    items:
-                      type: object
-                  selected_filters:
-                    type: object
-                    properties:
-                      text:
-                        type: string
-                        example: "نوربالا"
-                  seo_info:
-                    type: object
-                  footers:
-                    type: array
-                    items:
-                      type: object
 tags:
   - name: Providers
   - name: Users
@@ -1419,15 +1391,9 @@ components:
     SearchResult:
       type: object
       properties:
-        _id:
-          type: string
-          example: "doctor_540_1"
         id:
           type: string
           example: "540"
-        server_id:
-          type: integer
-          example: 1
         type:
           type: string
           example: "doctor"
@@ -1440,88 +1406,19 @@ components:
         view:
           type: string
           example: "1219K"
-        display_expertise:
-          type: string
-          example: "متخصص بیماریهای پوست و مو"
         satisfaction:
           type: integer
           example: 87
         rates_count:
           type: integer
           example: 8716
-        centers:
-          type: array
-          items:
-            type: object
-        display_address:
+        display_expertise:
           type: string
-          example: "یزد"
-        waiting_time:
-          type: string
-          example: "کمتر از دو ساعت"
-        badges:
-          type: array
-          items:
-            type: object
-        is_bulk:
-          type: boolean
-          example: false
-        consult_active_booking:
-          type: boolean
-          example: false
-        presence_active_booking:
-          type: boolean
-          example: true
+          description: "return this field If type=`doctor`"
+          example: "متخصص بیماریهای پوست و مو"
         url:
           type: string
           example: "/dr/دکتر-پروفسور-نور-بالا/"
-        actions:
-          type: array
-          items:
-            type: object
-        experience:
-          type: integer
-          example: 33
-        position:
-          type: integer
-          example: 1
-        has_presciption:
-          type: boolean
-          example: false
-        insurances:
-          type: array
-          items:
-            type: string
-        experiment_details:
-          type: object
-          properties:
-            search_index:
-              type: string
-              example: "slim_clinic"
-            consult_search_index:
-              type: string
-              example: "consult_freeturn_fast"
-    Center:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the center.
-        name:
-          type: string
-          description: The name of the center.
-        display_number:
-          type: string
-          description: Display number (if applicable).
-        address:
-          type: string
-          description: The address of the center.
-        province_name:
-          type: string
-          description: The name of the province where the center is located.
-        city_name:
-          type: string
-          description: The name of the city where the center is located.
 
   responses:
     '201':
