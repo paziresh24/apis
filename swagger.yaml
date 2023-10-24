@@ -1196,6 +1196,19 @@ components:
           title: page view
           type: integer
           example: 15
+        created_at:
+          nullable: false
+          title: provider registeration date and time
+          type: string
+          format: date-time
+          example: 2016-03-08T09:04:22+00:00
+        field_start_date:
+          nullable: true
+          title: >-
+            provider field start date ,for example: for a doctor it can be graduation date
+          type: string
+          format: date
+          example: 2016-03-08
     provider_speciality:
       description: Specialities of a provider
       properties:
