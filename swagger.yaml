@@ -1302,12 +1302,19 @@ components:
         description:
           type: string
           example: "Your feedback description here."
+        yours:
+          type: boolean
+          example: true
         feedback_number:
           type: integer
           example: 2
         reply_count:
           type: integer
           example: 0
+        reply_to_feedback_number:
+          type: integer
+          nullable: true
+          example: null
         created_at:
           type: string
           format: date-time
