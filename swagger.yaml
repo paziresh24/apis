@@ -931,7 +931,7 @@ paths:
         - name: text
           in: query
           description: The text to search for.
-          required: true
+          required: false
           schema:
             type: string
         - name: center
