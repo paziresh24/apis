@@ -51,6 +51,8 @@ paths:
                   $ref: '#/components/schemas/provider/properties/biography'
                 employee_id:
                   $ref: '#/components/schemas/provider/properties/employee_id'
+                notify_cell:
+                  $ref: '#/components/schemas/provider/properties/notify_cell'
       responses:
         '204':
           $ref: '#/components/responses/204'
@@ -1137,6 +1139,11 @@ components:
           title: provider biography
           type: string
           example: This is a example test biography
+        notify_cell:
+          nullable: true
+          title: notification cell of the provider
+          type: string
+          example: 9140002500
         user_id:
           $ref: '#/components/schemas/user/properties/id'
         employee_id:
