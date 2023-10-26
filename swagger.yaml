@@ -39,6 +39,8 @@ paths:
         - Providers
     patch:
       summary: Update provider fields
+      security:
+        - BearerAuth: [ ]
       description: ''
       operationId: user_id
       requestBody:
@@ -52,7 +54,7 @@ paths:
                 employee_id:
                   $ref: '#/components/schemas/provider/properties/employee_id'
                 notify_cell:
-                  $ref: '#/components/schemas/provider/properties/notify_cell'
+                  $ref: '#/components/schemas/provider_notification/properties/notify_cell'
       responses:
         '204':
           $ref: '#/components/responses/204'
@@ -76,6 +78,31 @@ paths:
       responses:
         '201':
           $ref: '#/components/responses/201'
+      tags:
+        - Providers
+  /v1/providers/{id}/notify-cell:
+    get:
+      description: 'get provider notification cell'
+      security:
+        - BearerAuth: [ ]
+      operationId: getProviderNotifyCell
+      parameters:
+        - name: id
+          schema:
+            $ref: '#/components/schemas/provider/properties/id'
+          in: path
+          required: true
+      responses:
+        '200':
+          description: get provider notification cell
+          content:
+            application/json:
+              schema:
+                properties:
+                  providers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/provider_notification'
       tags:
         - Providers
   /v1/providers/{id}/increment-page-view:
@@ -1126,6 +1153,16 @@ components:
           type: integer
         user_id:
           $ref: '#/components/schemas/user/properties/id'
+          
+    provider_notification:
+      description: provider information that need authentication
+      properties:
+       notify_cell:
+          nullable: true
+          title: notification cell of the provider
+          type: string
+          example: 9140002500
+      
     provider:
       description: provider information
       properties:
@@ -1139,11 +1176,6 @@ components:
           title: provider biography
           type: string
           example: This is a example test biography
-        notify_cell:
-          nullable: true
-          title: notification cell of the provider
-          type: string
-          example: 9140002500
         user_id:
           $ref: '#/components/schemas/user/properties/id'
         employee_id:
