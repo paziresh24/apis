@@ -1014,11 +1014,11 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/SearchResult'
-  /officialHolidays:
+  /holidays:
     get:
       summary: Retrieve official holidays
       description: Fetch a list of official holidays within a given date range.
-      operationId: getOfficialHolidays
+      operationId: getHolidays
       tags:
         - Holidays
       parameters:
