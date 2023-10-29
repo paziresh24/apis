@@ -1014,6 +1014,63 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/SearchResult'
+  /officialHolidays:
+    get:
+      summary: Retrieve official holidays
+      description: Fetch a list of official holidays within a given date range.
+      operationId: getOfficialHolidays
+      tags:
+        - Holidays
+      parameters:
+        - in: query
+          name: start_date
+          required: true
+          description: The start date of the date range in YYYY-MM-DD format.
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: end_date
+          required: true
+          description: The end date of the date range in YYYY-MM-DD format.
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: A list of official holidays within the given date range.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date
+                      description: The date of the official holiday.
+                    events:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          description:
+                            type: string
+                            description: A description of the holiday event.
+                          additional_description:
+                            type: string
+                            description: Additional information about the holiday event.
+                          is_religious:
+                            type: boolean
+                            description: Indicates whether the holiday event is religious.
+                          is_holiday:
+                            type: boolean
+                            description: Indicates whether the day is considered an official holiday.
+        '400':
+          description: Bad request. Invalid input provided.
+        '500':
+          description: Internal server error. Failed to fetch data from external API.
 tags:
   - name: Providers
   - name: Users
