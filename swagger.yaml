@@ -857,7 +857,7 @@ paths:
                   success: true
       tags:
         - Feedbacks
-  /feedbacks/{id}:
+  /v1/feedbacks/{id}:
     patch:
       summary: Update feedback description
       description: Update description of feedback by its ID.
