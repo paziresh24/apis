@@ -39,6 +39,8 @@ paths:
         - Providers
     patch:
       summary: Update provider fields
+      security:
+        - BearerAuth: [ ]
       description: ''
       operationId: user_id
       requestBody:
@@ -51,6 +53,8 @@ paths:
                   $ref: '#/components/schemas/provider/properties/biography'
                 employee_id:
                   $ref: '#/components/schemas/provider/properties/employee_id'
+                notify_cell:
+                  $ref: '#/components/schemas/provider_notification/properties/notify_cell'
       responses:
         '204':
           $ref: '#/components/responses/204'
@@ -74,6 +78,31 @@ paths:
       responses:
         '201':
           $ref: '#/components/responses/201'
+      tags:
+        - Providers
+  /v1/providers/{id}/notify-cell:
+    get:
+      description: 'get provider notification cell'
+      security:
+        - BearerAuth: [ ]
+      operationId: getProviderNotifyCell
+      parameters:
+        - name: id
+          schema:
+            $ref: '#/components/schemas/provider/properties/id'
+          in: path
+          required: true
+      responses:
+        '200':
+          description: get provider notification cell
+          content:
+            application/json:
+              schema:
+                properties:
+                  providers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/provider_notification'
       tags:
         - Providers
   /v1/providers/{id}/increment-page-view:
@@ -985,6 +1014,63 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/SearchResult'
+  /holidays:
+    get:
+      summary: Retrieve official holidays
+      description: Fetch a list of official holidays within a given date range.
+      operationId: getHolidays
+      tags:
+        - Holidays
+      parameters:
+        - in: query
+          name: start_date
+          required: true
+          description: The start date of the date range in YYYY-MM-DD format.
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: end_date
+          required: true
+          description: The end date of the date range in YYYY-MM-DD format.
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: A list of official holidays within the given date range.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date
+                      description: The date of the official holiday.
+                    events:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          description:
+                            type: string
+                            description: A description of the holiday event.
+                          additional_description:
+                            type: string
+                            description: Additional information about the holiday event.
+                          is_religious:
+                            type: boolean
+                            description: Indicates whether the holiday event is religious.
+                          is_holiday:
+                            type: boolean
+                            description: Indicates whether the day is considered an official holiday.
+        '400':
+          description: Bad request. Invalid input provided.
+        '500':
+          description: Internal server error. Failed to fetch data from external API.
 tags:
   - name: Providers
   - name: Users
@@ -1124,6 +1210,16 @@ components:
           type: integer
         user_id:
           $ref: '#/components/schemas/user/properties/id'
+          
+    provider_notification:
+      description: provider information that need authentication
+      properties:
+       notify_cell:
+          nullable: true
+          title: notification cell of the provider
+          type: string
+          example: 9140002500
+      
     provider:
       description: provider information
       properties:
@@ -1168,6 +1264,19 @@ components:
           title: page view
           type: integer
           example: 15
+        created_at:
+          nullable: false
+          title: provider registeration date and time
+          type: string
+          format: date-time
+          example: 2016-03-08T09:04:22+00:00
+        field_start_date:
+          nullable: true
+          title: >-
+            provider field start date ,for example: for a doctor it can be graduation date
+          type: string
+          format: date
+          example: 2016-03-08
     provider_speciality:
       description: Specialities of a provider
       properties:
