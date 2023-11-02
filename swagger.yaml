@@ -950,6 +950,61 @@ paths:
                 example:
                   status: "SUCCESS"
                   message: "درخواست شما با موفقیت پردازش شد"
+  /v1/feedbacks/{id}/like:
+    post:
+      summary: feedback like
+      description: like on the feedback
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the feedback to be liked.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Feedback liked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                example:
+                  status: "SUCCESS"
+                  message: "درخواست شما با موفقیت پردازش شد"
+      tags:
+        - Feedbacks
+    delete:
+      summary: feedback un-like
+      description: remove like on the feedback
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the feedback to remove like.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Feedback like removed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                example:
+                  status: "SUCCESS"
+                  message: "درخواست شما با موفقیت پردازش شد"
+      tags:
+        - Feedbacks
   /v1/search:
     get:
       summary: Search for something
