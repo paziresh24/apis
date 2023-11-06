@@ -807,6 +807,18 @@ paths:
           description: "The slug representing."
           schema:
             type: "string"
+        - name: "start_date"
+          in: "query"
+          required: false
+          description: "The start date with format Y-m-d like 2023-01-01"
+          schema:
+            type: "string"
+        - name: "end_date"
+          in: "query"
+          required: false
+          description: "The end date with format Y-m-d like 2023-11-06"
+          schema:
+            type: "string"
       responses:
         '200':
           description: "Successfully retrieved average waiting time."
@@ -1265,7 +1277,7 @@ components:
           type: integer
         user_id:
           $ref: '#/components/schemas/user/properties/id'
-          
+
     provider_notification:
       description: provider information that need authentication
       properties:
@@ -1274,7 +1286,7 @@ components:
           title: notification cell of the provider
           type: string
           example: 9140002500
-      
+
     provider:
       description: provider information
       properties:
@@ -1495,8 +1507,8 @@ components:
           type: "string"
           example: "5532"
         waiting_time:
-          type: "string"
-          example: "0.5429"
+          type: "integer"
+          example: 0.5429
         waiting_time_count:
           type: "integer"
           example: 35
