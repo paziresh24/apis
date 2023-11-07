@@ -10,7 +10,7 @@ info:
     url: https://www.paziresh24.com
 servers:
   - url: https://apigw.paziresh24.com
-    variables: { }
+    variables: {}
 paths:
   /v1/providers:
     get:
@@ -40,7 +40,7 @@ paths:
     patch:
       summary: Update provider fields
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       description: ''
       operationId: user_id
       requestBody:
@@ -54,7 +54,8 @@ paths:
                 employee_id:
                   $ref: '#/components/schemas/provider/properties/employee_id'
                 notify_cell:
-                  $ref: '#/components/schemas/provider_notification/properties/notify_cell'
+                  $ref: >-
+                    #/components/schemas/provider_notification/properties/notify_cell
       responses:
         '204':
           $ref: '#/components/responses/204'
@@ -82,9 +83,9 @@ paths:
         - Providers
   /v1/providers/{id}/notify-cell:
     get:
-      description: 'get provider notification cell'
+      description: get provider notification cell
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       operationId: getProviderNotifyCell
       parameters:
         - name: id
@@ -119,7 +120,6 @@ paths:
       responses:
         '200':
           description: provider page view incremented successfully
-
       tags:
         - Providers
   /v1/memberships:
@@ -222,7 +222,7 @@ paths:
       description: ''
       operationId: ''
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         content:
           application/json:
@@ -453,14 +453,13 @@ paths:
                   allOf:
                     - $ref: '#/components/schemas/authenticated_user/properties/cell'
                 city_id:
-                  $ref: >-
-                    #/components/schemas/city/properties/id
+                  $ref: '#/components/schemas/city/properties/id'
                 province_id:
-                  $ref: >-
-                    #/components/schemas/province/properties/id
+                  $ref: '#/components/schemas/province/properties/id'
                 gender:
-                  $ref: >-
-                    #/components/schemas/authenticated_user/properties/gender
+                  $ref: '#/components/schemas/authenticated_user/properties/gender'
+                sso_id:
+                  $ref: '#/components/schemas/user/properties/sso_id'
       responses:
         '200':
           description: Get Inserted user information
@@ -472,6 +471,32 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/authenticated_user'
+      tags:
+        - Users
+    get:
+      summary: get users informations
+      description: ''
+      operationId: getUsersInformation
+      parameters: 
+        - name: sso_id
+          schema:
+            $ref: '#/components/schemas/user/properties/sso_id'
+          in: query
+        - name: cell
+          schema:
+            $ref: '#/components/schemas/user/properties/cell'
+          in: query
+      responses:
+        '200':
+          description: Default users list response
+          content:
+            application/json:
+              schema:
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/user'
       tags:
         - Users
   /v1/users/{id}:
@@ -504,7 +529,7 @@ paths:
       description: ''
       operationId: updateUser
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       parameters:
         - name: id
           schema:
@@ -533,14 +558,13 @@ paths:
                   type: string
                   description: The otp sent to the user new cell.
                 city_id:
-                  $ref: >-
-                    #/components/schemas/city/properties/id
+                  $ref: '#/components/schemas/city/properties/id'
                 province_id:
-                  $ref: >-
-                    #/components/schemas/province/properties/id
+                  $ref: '#/components/schemas/province/properties/id'
                 gender:
-                  $ref: >-
-                    #/components/schemas/authenticated_user/properties/gender
+                  $ref: '#/components/schemas/authenticated_user/properties/gender'
+                sso_id:
+                  $ref: '#/components/schemas/authenticated_user/properties/sso_id'
       responses:
         '200':
           description: Get Authenticated user information
@@ -560,7 +584,7 @@ paths:
       description: ''
       operationId: userCellOtp
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       parameters:
         - name: id
           schema:
@@ -589,7 +613,7 @@ paths:
       description: ''
       operationId: getAuthenticatedUser
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       responses:
         '200':
           description: Get Authenticated user information
@@ -659,7 +683,7 @@ paths:
       summary: refresh expired authentication token
       operationId: RefreshToken
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       responses:
         '200':
           description: success refresh response
@@ -727,7 +751,7 @@ paths:
     patch:
       summary: Update an appointment info
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       description: ''
       operationId: ''
       parameters:
@@ -779,7 +803,7 @@ paths:
     delete:
       summary: Delete an appointment
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       description: ''
       operationId: ''
       parameters:
@@ -796,46 +820,48 @@ paths:
   /v1/feedbacks/average-waiting-time:
     get:
       tags:
-        - "Feedbacks"
-      summary: "Get the average waiting time for a specific center."
-      description: "Retrieve the average waiting time for a given center based on the provided slug."
-      operationId: "getAverageWaitingTime"
+        - Feedbacks
+      summary: Get the average waiting time for a specific center.
+      description: >-
+        Retrieve the average waiting time for a given center based on the
+        provided slug.
+      operationId: getAverageWaitingTime
       parameters:
-        - name: "slug"
-          in: "query"
+        - name: slug
+          in: query
           required: true
-          description: "The slug representing."
+          description: The slug representing.
           schema:
-            type: "string"
-        - name: "start_date"
-          in: "query"
+            type: string
+        - name: start_date
+          in: query
           required: false
-          description: "The start date with format Y-m-d like 2023-01-01"
+          description: The start date with format Y-m-d like 2023-01-01
           schema:
-            type: "string"
-        - name: "end_date"
-          in: "query"
+            type: string
+        - name: end_date
+          in: query
           required: false
-          description: "The end date with format Y-m-d like 2023-11-06"
+          description: The end date with format Y-m-d like 2023-11-06
           schema:
-            type: "string"
+            type: string
       responses:
         '200':
-          description: "Successfully retrieved average waiting time."
+          description: Successfully retrieved average waiting time.
           content:
             application/json:
               schema:
                 properties:
                   status:
-                    type: "string"
-                    example: "SUCCESS"
+                    type: string
+                    example: SUCCESS
                   message:
-                    type: "string"
-                    example: "درخواست شما با موفقیت پردازش شد"
+                    type: string
+                    example: درخواست شما با موفقیت پردازش شد
                   result:
-                    type: "array"
+                    type: array
                     items:
-                      $ref: "#/components/schemas/WaitingTimeInfo"
+                      $ref: '#/components/schemas/WaitingTimeInfo'
   /v1/feedbacks:
     get:
       summary: Retrieve feedbacks by ID that you provide it
@@ -880,7 +906,7 @@ paths:
                   $ref: '#/components/schemas/Feedback/properties/description'
                 external_id:
                   type: string
-                  example: "your external identity"
+                  example: your external identity
       responses:
         '200':
           description: Feedback submitted successfully
@@ -894,7 +920,7 @@ paths:
                   success:
                     type: boolean
                 example:
-                  action: "enqueued"
+                  action: enqueued
                   success: true
       tags:
         - Feedbacks
@@ -931,7 +957,7 @@ paths:
                   success:
                     type: boolean
                 example:
-                  action: "enqueued"
+                  action: enqueued
                   success: true
       tags:
         - Feedbacks
@@ -960,8 +986,8 @@ paths:
                   message:
                     type: string
                 example:
-                  status: "SUCCESS"
-                  message: "درخواست شما با موفقیت پردازش شد"
+                  status: SUCCESS
+                  message: درخواست شما با موفقیت پردازش شد
   /v1/feedbacks/{id}/like:
     post:
       summary: feedback like
@@ -986,8 +1012,8 @@ paths:
                   message:
                     type: string
                 example:
-                  status: "SUCCESS"
-                  message: "درخواست شما با موفقیت پردازش شد"
+                  status: SUCCESS
+                  message: درخواست شما با موفقیت پردازش شد
       tags:
         - Feedbacks
     delete:
@@ -1013,8 +1039,8 @@ paths:
                   message:
                     type: string
                 example:
-                  status: "SUCCESS"
-                  message: "درخواست شما با موفقیت پردازش شد"
+                  status: SUCCESS
+                  message: درخواست شما با موفقیت پردازش شد
       tags:
         - Feedbacks
   /v1/search:
@@ -1044,7 +1070,6 @@ paths:
             type: string
             enum:
               - فقط پزشکان
-              # Add more enum values as needed
         - name: expertise
           in: query
           description: The expertise for the search.
@@ -1053,7 +1078,6 @@ paths:
             type: string
             enum:
               - internal-diseases
-              # Add more enum values as needed
       responses:
         '200':
           description: Successful response
@@ -1133,7 +1157,9 @@ paths:
                             description: Indicates whether the holiday event is religious.
                           is_holiday:
                             type: boolean
-                            description: Indicates whether the day is considered an official holiday.
+                            description: >-
+                              Indicates whether the day is considered an
+                              official holiday.
         '400':
           description: Bad request. Invalid input provided.
         '500':
@@ -1180,6 +1206,11 @@ components:
           $ref: '#/components/schemas/city'
         province:
           $ref: '#/components/schemas/province'
+        sso_id:
+          nullable: false
+          description: uniqe id of OAuth2 SSO system
+          example: d90af07e-7d71-11ee-86c8-005056ad7d06
+          type: string
     success_authentication:
       properties:
         access_token:
@@ -1220,18 +1251,20 @@ components:
           description: national_code of the user
           example: '124666554'
           type: string
+        sso_id: 
+          $ref: '#/components/schemas/user/properties/sso_id'
     city:
       description: city properties
       properties:
         name:
           nullable: true
           description: name of the city
-          example: 'یزد'
+          example: یزد
           type: string
         en_slug:
           nullable: true
           description: english slug of the city
-          example: 'yazd'
+          example: yazd
           type: string
         id:
           nullable: true
@@ -1254,19 +1287,18 @@ components:
         name:
           nullable: true
           description: name of the province
-          example: 'یزد'
+          example: یزد
           type: string
         en_slug:
           nullable: true
           description: english slug of the province
-          example: 'yazd'
+          example: yazd
           type: string
         id:
           nullable: true
           description: id of the province
           example: 31
           type: integer
-
     sub_user:
       description: user subset information
       properties:
@@ -1277,16 +1309,14 @@ components:
           type: integer
         user_id:
           $ref: '#/components/schemas/user/properties/id'
-
     provider_notification:
       description: provider information that need authentication
       properties:
-       notify_cell:
+        notify_cell:
           nullable: true
           title: notification cell of the provider
           type: string
           example: 9140002500
-
     provider:
       description: provider information
       properties:
@@ -1336,14 +1366,15 @@ components:
           title: provider registeration date and time
           type: string
           format: date-time
-          example: 2016-03-08T09:04:22+00:00
+          example: '2016-03-08T09:04:22+00:00'
         field_start_date:
           nullable: true
           title: >-
-            provider field start date ,for example: for a doctor it can be graduation date
+            provider field start date ,for example: for a doctor it can be
+            graduation date
           type: string
           format: date
-          example: 2016-03-08
+          example: '2016-03-08'
     provider_speciality:
       description: Specialities of a provider
       properties:
@@ -1501,20 +1532,20 @@ components:
         - not_visited
         - visited
     WaitingTimeInfo:
-      type: "object"
+      type: object
       properties:
         center_id:
-          type: "string"
-          example: "5532"
+          type: string
+          example: '5532'
         waiting_time:
-          type: "integer"
+          type: integer
           example: 0.5429
         waiting_time_count:
-          type: "integer"
+          type: integer
           example: 35
         waiting_time_title:
-          type: "string"
-          example: "کمتر از یک ساعت"
+          type: string
+          example: کمتر از یک ساعت
     Feedback:
       type: object
       properties:
@@ -1523,13 +1554,13 @@ components:
           example: 75
         name:
           type: string
-          example: "user's name"
+          example: user's name
         user_id:
           type: string
-          example: "123456789"
+          example: '123456789'
         description:
           type: string
-          example: "Your feedback description here."
+          example: Your feedback description here.
         yours:
           type: boolean
           example: true
@@ -1546,29 +1577,29 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2023-10-18T09:57:37.991Z"
+          example: '2023-10-18T09:57:37.991Z'
         updated_at:
           type: string
           format: date-time
-          example: "2023-10-18T09:57:37.991Z"
+          example: '2023-10-18T09:57:37.991Z'
     SearchResult:
       type: object
       properties:
         id:
           type: string
-          example: "540"
+          example: '540'
         type:
           type: string
-          example: "doctor"
+          example: doctor
         title:
           type: string
-          example: "دکتر پروفسور محمد تقی نوربالا"
+          example: دکتر پروفسور محمد تقی نوربالا
         image:
           type: string
-          example: "/api/getImage/p24/search-men/file.jpg"
+          example: /api/getImage/p24/search-men/file.jpg
         view:
           type: string
-          example: "1219K"
+          example: 1219K
         satisfaction:
           type: integer
           example: 87
@@ -1577,12 +1608,11 @@ components:
           example: 8716
         display_expertise:
           type: string
-          description: "return this field If type=`doctor`"
-          example: "متخصص بیماریهای پوست و مو"
+          description: return this field If type=`doctor`
+          example: متخصص بیماریهای پوست و مو
         url:
           type: string
-          example: "/dr/دکتر-پروفسور-نور-بالا/"
-
+          example: /dr/دکتر-پروفسور-نور-بالا/
   responses:
     '201':
       description: Record inserted successfully
