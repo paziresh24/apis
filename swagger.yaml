@@ -845,6 +845,12 @@ paths:
           description: The end date with format Y-m-d like 2023-11-06
           schema:
             type: string
+        - name: "limit"
+          in: "query"
+          required: false
+          description: "The feedbacks limit parameter"
+          schema:
+            type: "integer"
       responses:
         '200':
           description: Successfully retrieved average waiting time.
