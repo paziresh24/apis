@@ -484,7 +484,7 @@ paths:
           in: query
         - name: cell
           schema:
-            $ref: '#/components/schemas/user/properties/cell'
+            $ref: '#/components/schemas/authenticated_user/properties/cell'
           in: query
       responses:
         '200':
@@ -1170,6 +1170,62 @@ paths:
           description: Bad request. Invalid input provided.
         '500':
           description: Internal server error. Failed to fetch data from external API.
+  /files/{name}:
+    get:
+      summary: get file content by file name
+      description: get file content by name and download it
+      tags:
+        - Files
+      parameters:
+        - in: path
+          name: name
+          required: true
+          description: file name with format (jpg,png,pdf,docx)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: recived file content successfully
+          content:
+            application/jpeg:
+              schema:
+                type: string
+                format: binary
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/png:
+              schema:
+                type: string
+                format: binary
+            application/docx:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                description: return content file in response
+                example: inline; filename="name.jpg"
+  /files:
+    post:
+        summary: upload file
+        tags:
+          - Files    
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  file:
+                    type: string
+                    format: binary  
+        responses:
+          '200':
+            description: file uploaded successfuly
 tags:
   - name: Providers
   - name: Users
@@ -1180,6 +1236,7 @@ tags:
   - name: Appointments
   - name: Providers Specialities
   - name: SpecialitiesTags
+  - name: Files
 components:
   schemas:
     user:
