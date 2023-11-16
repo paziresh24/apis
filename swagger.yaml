@@ -557,10 +557,9 @@ paths:
                   example: '4556'
                   type: string
                   description: The otp sent to the user new cell.
-                city_id:
-                  $ref: '#/components/schemas/city/properties/id'
-                province_id:
-                  $ref: '#/components/schemas/province/properties/id'
+                image_name:
+                  $ref: '#/components/schemas/user/properties/image'
+                  
                 gender:
                   $ref: '#/components/schemas/authenticated_user/properties/gender'
                 sso_id:
@@ -1265,10 +1264,11 @@ components:
           enum:
             - male
             - female
-        city:
-          $ref: '#/components/schemas/city'
-        province:
-          $ref: '#/components/schemas/province'
+        image:
+          nullable: true
+          description: image of the user
+          example: example.jpg
+          type: string
         sso_id:
           nullable: false
           description: uniqe id of OAuth2 SSO system
