@@ -1083,6 +1083,30 @@ paths:
             type: string
             enum:
               - internal-diseases
+        - name: token
+          in: query
+          description: The token of the user for requests that need permission
+          required: false
+          schema:
+            type: string
+        - name: token
+          in: cookie
+          description: The token of the user for requests that need permission
+          required: false
+          schema:
+            type: string
+        - name: give_search_engine_request
+          in: query
+          description: for degugging search requests, curl request of search engine return in response(need admin permission)
+          required: false
+          schema:
+            type: boolean
+        - name: give_search_engine_response
+          in: query
+          description: for degugging search requests, response of search engine return in response.(need admin permission)
+          required: false
+          schema:
+            type: boolean
       responses:
         '200':
           description: Successful response
@@ -1110,6 +1134,61 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/SearchResult'
+                      debug_mode_result:
+                        type: object
+                        properties:
+                          search_engine_request:
+                            type: string
+                            example: "curl -X GET -H 'APIKEY: assssasdqwqwdqdqwdq' -H 'Content-Type: application/json' 'https://searchia.ir/api/index/slim_clinic?filters=&optionalFilters=&facetFilters=result_type%3A%D9%81%D9%82%D8%B7%20%D9%BE%D8%B2%D8%B4%DA%A9%D8%A7%D9%86%2Cresult_type%3A%D9%81%D9%82%D8%B7%20%DA%A9%D9%84%DB%8C%D9%86%DB%8C%DA%A9%E2%80%8C%D9%87%D8%A7%20%D9%88%20%D8%A8%DB%8C%D9%85%D8%A7%D8%B1%D8%B3%D8%AA%D8%A7%D9%86%E2%80%8C%D9%87%D8%A7&query=%D8%B2%D9%86%D8%A7%D9%86&from=0&size=20&facets=record_type%2Cresult_type%2Cgender%2Cturn_type%2Cdegree%2Cgood_behave_doctor%2Cpopular_doctor%2Cless_waiting_time_doctor%2Cconsult_price%2Chas_prescription%2Cwork_time_frames%2Chospital_affiliation%2Cgroup_expertise%2Cexpertise%2Ccenter_type&docInfo=1'"
+                          search_engine_response:
+                            type: string
+                            example: '{
+                "totalHits": 65731,
+                "searchTime": 184,
+                "queryId": "366937A1AB51761A",
+                "results": [
+                    {
+                        "indexName": "slim_clinic",
+                        "documentId": "doctor_98a72fbc-f32b-41e9-b6e2-c498768e09e8_1",
+                        "documentInfo": {
+                            "NumberOfWords": 1,
+                            "Distance": 0,
+                            "Position": 2,
+                            "NumberOfExactMatch": 1,
+                            "ExactMatch": false,
+                            "DocRank": 0
+                        },
+                        "beforePersonalizationPosition": 0,
+                        "pinned": false,
+                        "contentRankingDetails": null,
+                        "source": {
+                            "expertises": [
+                                {
+                                    "degree": {
+                                        "name": "کارشناس",
+                                        "id": 2
+                                    },
+                                    "expertise": {
+                                        "name": "مامایی"
+                                    },
+                                    "expertise_groups": [
+                                        {
+                                            "name": "زنان، زایمان و نازایی"
+                                        },
+                                        {
+                                            "name": "زنان، زایمان و نازایی"
+                                        }
+                                    ],
+                                    "alias_title": "مراقب دوران بارداری-مشاوره ودرمان عفونت های زنان-پاپ اسمیر-آموزش بهداشت فردی-آموزش نحوه صحیح شیردهی"
+                                }
+                            ],
+                            "presence_freeturn": 1700293500,
+                            "prefix": "دکتر",
+                            "prescription_waiting_time_wilson_score": 1.1432334426561412,
+                            "online_visit_waiting_time_wilson_score": 1.1,
+                            "expertise": [
+                                "مامایی"
+                            ],'
   /holidays:
     get:
       summary: Retrieve official holidays
