@@ -361,6 +361,8 @@ paths:
                   $ref: '#/components/schemas/academic_degree/properties/id'
                 speciality_id:
                   $ref: '#/components/schemas/speciality/properties/id'
+                achieved_at:
+                  $ref: '#/components/schemas/provider_speciality/properties/achieved_at'
       responses:
         '204':
           $ref: '#/components/responses/204'
@@ -388,6 +390,8 @@ paths:
                   $ref: '#/components/schemas/academic_degree/properties/id'
                 speciality_id:
                   $ref: '#/components/schemas/speciality/properties/id'
+                achieved_at:
+                  $ref: '#/components/schemas/provider_speciality/properties/achieved_at'
       responses:
         '204':
           $ref: '#/components/responses/204'
@@ -1527,6 +1531,13 @@ components:
           description: this refers to an alias title which was chosen by the provider
           type: string
           example: فوق تخصص حلق و گوش
+        achieved_at:
+          title: achieved at
+          nullable: true
+          description: This refers to achivment gregorian date of academic degree for this speciality
+          type: string
+          format: date
+          example: 2010-12-13
         speciality:
           $ref: '#/components/schemas/speciality'
         academic_degree:
