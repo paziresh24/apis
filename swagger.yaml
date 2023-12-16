@@ -871,6 +871,98 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/WaitingTimeInfo'
+  /v1/feedbacks/average-rates:
+    get:
+      tags:
+        - Feedbacks
+      summary: Get average rates .
+
+      operationId: getAverageRates
+      parameters:
+        - name: slug
+          in: query
+          required: true
+          description: The slug representing.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved average rates.
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: SUCCESS
+                  message:
+                    type: string
+                    example: درخواست شما با موفقیت پردازش شد
+                  result:
+                    $ref: '#/components/schemas/AverageRates'
+  /v1/feedbacks/count:
+    get:
+      tags:
+        - Feedbacks
+      summary: Get count of feedbacks.
+
+      operationId: getCountFeedbacks
+      parameters:
+        - name: slug
+          in: query
+          required: true
+          description: The slug representing.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved count feedbacks.
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: SUCCESS
+                  message:
+                    type: string
+                    example: درخواست شما با موفقیت پردازش شد
+                  result: 
+                    type: integer
+                    example: 352
+  /v1/feedbacks/satisfaction-percent:
+    get:
+      tags:
+        - Feedbacks
+      summary: Get satisfaction percent of doctor.
+
+      operationId: getSatisfactionPercent
+      parameters:
+        - name: slug
+          in: query
+          required: true
+          description: The slug representing.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved satisfaction percent.
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: SUCCESS
+                  message:
+                    type: string
+                    example: درخواست شما با موفقیت پردازش شد
+                  result: 
+                    type: integer
+                    example: 82
+                  
+                      
+                    
   /v1/feedbacks:
     get:
       summary: Retrieve feedbacks by ID that you provide it
@@ -1695,6 +1787,18 @@ components:
         waiting_time_title:
           type: string
           example: کمتر از یک ساعت
+    AverageRates:
+      type: object
+      properties:
+        average_quality_of_treatment:
+          type: integer
+          example: 4.5
+        average_doctor_encounter:
+          type: integer
+          example: 4.6
+        average_explanation_of_issue:
+          type: integer
+          example: 4.5
     Feedback:
       type: object
       properties:
