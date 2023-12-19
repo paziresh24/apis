@@ -630,6 +630,34 @@ paths:
                       $ref: '#/components/schemas/authenticated_user'
       tags:
         - Auth
+        
+  /v1/auth/me/feedbacks:
+    summary: feedbacks of authenticated user
+    get:
+      summary: get feedbacks of authenticated user
+      description: ''
+      operationId: getFeedbacksOfAuthenticatedUser
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: feedbacks of authenticated user recived successfuly
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "درخواست شما با موفقیت پردازش شد"
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Feedback'
+      tags:
+        - Auth
   /v1/auth/resend-password:
     summary: send new password to user cell
     get:
