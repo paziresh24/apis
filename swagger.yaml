@@ -868,6 +868,58 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/WaitingTimeInfo'
+  /v1/feedbacks/waiting-time-statistics:
+    get:
+      tags:
+        - Feedbacks
+      summary: Get the statistics of waiting time for a specific center.
+      description: >-
+        Retrieve the statistics of waiting time for a given center based on the
+        provided slug.
+      operationId: getWaitingTimeStatistics
+      parameters:
+        - name: slug
+          in: query
+          required: true
+          description: The slug representing.
+          schema:
+            type: string
+        - name: start_date
+          in: query
+          required: false
+          description: The start date with format Y-m-d like 2023-01-01
+          schema:
+            type: string
+        - name: end_date
+          in: query
+          required: false
+          description: The end date with format Y-m-d like 2023-11-06
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: The feedbacks limit parameter
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved statistics of waiting time.
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: SUCCESS
+                  message:
+                    type: string
+                    example: درخواست شما با موفقیت پردازش شد
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WaitingTimeStatistics'
+
   /v1/feedbacks:
     get:
       summary: Retrieve feedbacks by ID that you provide it
@@ -1552,6 +1604,44 @@ components:
         waiting_time_title:
           type: string
           example: کمتر از یک ساعت
+    WaitingTimeStatistics:
+      type: object
+      properties:
+        center_id:
+          type: string
+          example: '5532'
+        statistics:
+          type: array
+          items:
+            $ref: '#/components/schemas/WaitingTimeStatistic'
+    WaitingTimeStatistic:
+      description: statistic of waiting time
+      properties:
+        waiting_time:
+          nullable: false
+          title: waiting time
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+          example: 1
+        waiting_time_title:
+          nullable: false
+          title: title of waiting time
+          type: string
+          example: کمتر از یک ساعت
+        waiting_time_count:
+          nullable: false
+          title: amount of waiting time
+          type: integer
+          example: 9
+        waiting_time_percent:
+          nullable: false
+          title: percent of waiting time on the all waiting times
+          type: number
+          example: 25.71
     Feedback:
       type: object
       properties:
