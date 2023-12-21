@@ -361,6 +361,8 @@ paths:
                   $ref: '#/components/schemas/academic_degree/properties/id'
                 speciality_id:
                   $ref: '#/components/schemas/speciality/properties/id'
+                achieved_at:
+                  $ref: '#/components/schemas/provider_speciality/properties/achieved_at'
       responses:
         '204':
           $ref: '#/components/responses/204'
@@ -388,6 +390,8 @@ paths:
                   $ref: '#/components/schemas/academic_degree/properties/id'
                 speciality_id:
                   $ref: '#/components/schemas/speciality/properties/id'
+                achieved_at:
+                  $ref: '#/components/schemas/provider_speciality/properties/achieved_at'
       responses:
         '204':
           $ref: '#/components/responses/204'
@@ -484,7 +488,7 @@ paths:
           in: query
         - name: cell
           schema:
-            $ref: '#/components/schemas/user/properties/cell'
+            $ref: '#/components/schemas/authenticated_user/properties/cell'
           in: query
       responses:
         '200':
@@ -557,10 +561,9 @@ paths:
                   example: '4556'
                   type: string
                   description: The otp sent to the user new cell.
-                city_id:
-                  $ref: '#/components/schemas/city/properties/id'
-                province_id:
-                  $ref: '#/components/schemas/province/properties/id'
+                image_name:
+                  $ref: '#/components/schemas/user/properties/image'
+
                 gender:
                   $ref: '#/components/schemas/authenticated_user/properties/gender'
                 sso_id:
@@ -625,6 +628,34 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/authenticated_user'
+      tags:
+        - Auth
+
+  /v1/auth/me/feedbacks:
+    summary: feedbacks of authenticated user
+    get:
+      summary: get feedbacks of authenticated user
+      description: ''
+      operationId: getFeedbacksOfAuthenticatedUser
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: feedbacks of authenticated user recived successfuly
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "درخواست شما با موفقیت پردازش شد"
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Feedback'
       tags:
         - Auth
   /v1/auth/resend-password:
@@ -920,6 +951,98 @@ paths:
                     items:
                       $ref: '#/components/schemas/WaitingTimeStatistics'
 
+  /v1/feedbacks/average-rates:
+    get:
+      tags:
+        - Feedbacks
+      summary: Get average rates .
+
+      operationId: getAverageRates
+      parameters:
+        - name: slug
+          in: query
+          required: true
+          description: The slug representing.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved average rates.
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: SUCCESS
+                  message:
+                    type: string
+                    example: درخواست شما با موفقیت پردازش شد
+                  result:
+                    $ref: '#/components/schemas/AverageRates'
+  /v1/feedbacks/count:
+    get:
+      tags:
+        - Feedbacks
+      summary: Get count of feedbacks.
+
+      operationId: getCountFeedbacks
+      parameters:
+        - name: slug
+          in: query
+          required: true
+          description: The slug representing.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved count feedbacks.
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: SUCCESS
+                  message:
+                    type: string
+                    example: درخواست شما با موفقیت پردازش شد
+                  result:
+                    type: integer
+                    example: 352
+  /v1/feedbacks/satisfaction-percent:
+    get:
+      tags:
+        - Feedbacks
+      summary: Get satisfaction percent of doctor.
+
+      operationId: getSatisfactionPercent
+      parameters:
+        - name: slug
+          in: query
+          required: true
+          description: The slug representing.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved satisfaction percent.
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: SUCCESS
+                  message:
+                    type: string
+                    example: درخواست شما با موفقیت پردازش شد
+                  result:
+                    type: integer
+                    example: 82
+
+
+
   /v1/feedbacks:
     get:
       summary: Retrieve feedbacks by ID that you provide it
@@ -1136,6 +1259,30 @@ paths:
             type: string
             enum:
               - internal-diseases
+        - name: token
+          in: query
+          description: The token of the user for requests that need permission
+          required: false
+          schema:
+            type: string
+        - name: token
+          in: cookie
+          description: The token of the user for requests that need permission
+          required: false
+          schema:
+            type: string
+        - name: give_search_engine_request
+          in: query
+          description: for degugging search requests, curl request of search engine return in response(need admin permission)
+          required: false
+          schema:
+            type: boolean
+        - name: give_search_engine_response
+          in: query
+          description: for degugging search requests, response of search engine return in response.(need admin permission)
+          required: false
+          schema:
+            type: boolean
       responses:
         '200':
           description: Successful response
@@ -1163,6 +1310,61 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/SearchResult'
+                      debug_mode_result:
+                        type: object
+                        properties:
+                          search_engine_request:
+                            type: string
+                            example: "curl -X GET -H 'APIKEY: assssasdqwqwdqdqwdq' -H 'Content-Type: application/json' 'https://searchia.ir/api/index/slim_clinic?filters=&optionalFilters=&facetFilters=result_type%3A%D9%81%D9%82%D8%B7%20%D9%BE%D8%B2%D8%B4%DA%A9%D8%A7%D9%86%2Cresult_type%3A%D9%81%D9%82%D8%B7%20%DA%A9%D9%84%DB%8C%D9%86%DB%8C%DA%A9%E2%80%8C%D9%87%D8%A7%20%D9%88%20%D8%A8%DB%8C%D9%85%D8%A7%D8%B1%D8%B3%D8%AA%D8%A7%D9%86%E2%80%8C%D9%87%D8%A7&query=%D8%B2%D9%86%D8%A7%D9%86&from=0&size=20&facets=record_type%2Cresult_type%2Cgender%2Cturn_type%2Cdegree%2Cgood_behave_doctor%2Cpopular_doctor%2Cless_waiting_time_doctor%2Cconsult_price%2Chas_prescription%2Cwork_time_frames%2Chospital_affiliation%2Cgroup_expertise%2Cexpertise%2Ccenter_type&docInfo=1'"
+                          search_engine_response:
+                            type: string
+                            example: '{
+                "totalHits": 65731,
+                "searchTime": 184,
+                "queryId": "366937A1AB51761A",
+                "results": [
+                    {
+                        "indexName": "slim_clinic",
+                        "documentId": "doctor_98a72fbc-f32b-41e9-b6e2-c498768e09e8_1",
+                        "documentInfo": {
+                            "NumberOfWords": 1,
+                            "Distance": 0,
+                            "Position": 2,
+                            "NumberOfExactMatch": 1,
+                            "ExactMatch": false,
+                            "DocRank": 0
+                        },
+                        "beforePersonalizationPosition": 0,
+                        "pinned": false,
+                        "contentRankingDetails": null,
+                        "source": {
+                            "expertises": [
+                                {
+                                    "degree": {
+                                        "name": "کارشناس",
+                                        "id": 2
+                                    },
+                                    "expertise": {
+                                        "name": "مامایی"
+                                    },
+                                    "expertise_groups": [
+                                        {
+                                            "name": "زنان، زایمان و نازایی"
+                                        },
+                                        {
+                                            "name": "زنان، زایمان و نازایی"
+                                        }
+                                    ],
+                                    "alias_title": "مراقب دوران بارداری-مشاوره ودرمان عفونت های زنان-پاپ اسمیر-آموزش بهداشت فردی-آموزش نحوه صحیح شیردهی"
+                                }
+                            ],
+                            "presence_freeturn": 1700293500,
+                            "prefix": "دکتر",
+                            "prescription_waiting_time_wilson_score": 1.1432334426561412,
+                            "online_visit_waiting_time_wilson_score": 1.1,
+                            "expertise": [
+                                "مامایی"
+                            ],'
   /holidays:
     get:
       summary: Retrieve official holidays
@@ -1222,6 +1424,62 @@ paths:
           description: Bad request. Invalid input provided.
         '500':
           description: Internal server error. Failed to fetch data from external API.
+  /files/{name}:
+    get:
+      summary: get file content by file name
+      description: get file content by name and download it
+      tags:
+        - Files
+      parameters:
+        - in: path
+          name: name
+          required: true
+          description: file name with format (jpg,png,pdf,docx)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: recived file content successfully
+          content:
+            application/jpeg:
+              schema:
+                type: string
+                format: binary
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/png:
+              schema:
+                type: string
+                format: binary
+            application/docx:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                description: return content file in response
+                example: inline; filename="name.jpg"
+  /files:
+    post:
+        summary: upload file
+        tags:
+          - Files
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  file:
+                    type: string
+                    format: binary
+        responses:
+          '200':
+            description: file uploaded successfuly
 tags:
   - name: Providers
   - name: Users
@@ -1232,6 +1490,7 @@ tags:
   - name: Appointments
   - name: Providers Specialities
   - name: SpecialitiesTags
+  - name: Files
 components:
   schemas:
     user:
@@ -1260,10 +1519,11 @@ components:
           enum:
             - male
             - female
-        city:
-          $ref: '#/components/schemas/city'
-        province:
-          $ref: '#/components/schemas/province'
+        image:
+          nullable: true
+          description: image of the user
+          example: example.jpg
+          type: string
         sso_id:
           nullable: false
           description: uniqe id of OAuth2 SSO system
@@ -1295,10 +1555,6 @@ components:
           $ref: '#/components/schemas/user/properties/family'
         gender:
           $ref: '#/components/schemas/user/properties/gender'
-        city:
-          $ref: '#/components/schemas/user/properties/city'
-        province:
-          $ref: '#/components/schemas/user/properties/province'
         cell:
           nullable: true
           description: cell of the user
@@ -1447,6 +1703,13 @@ components:
           description: this refers to an alias title which was chosen by the provider
           type: string
           example: فوق تخصص حلق و گوش
+        achieved_at:
+          title: achieved at
+          nullable: true
+          description: This refers to achivment gregorian date of academic degree for this speciality
+          type: string
+          format: date
+          example: 2010-12-13
         speciality:
           $ref: '#/components/schemas/speciality'
         academic_degree:
@@ -1642,6 +1905,18 @@ components:
           title: percent of waiting time on the all waiting times
           type: number
           example: 25.71
+    AverageRates:
+      type: object
+      properties:
+        average_quality_of_treatment:
+          type: integer
+          example: 4.5
+        average_doctor_encounter:
+          type: integer
+          example: 4.6
+        average_explanation_of_issue:
+          type: integer
+          example: 4.5
     Feedback:
       type: object
       properties:
