@@ -9,13 +9,14 @@ servers:
 tags:
   - name: Apps
     description: Everything about Apps
+  - name: Installation
+    description: Managing app installations
 paths:
   /apps:
     get:
       tags:
         - Apps
-      summary: Get All Apps
-      operationId: getApps
+      summary: Get all apps
       responses:
         '200':
           description: Successful operation
@@ -26,15 +27,14 @@ paths:
                 items:
                   oneOf:
                      - $ref: '#/components/schemas/App'
-  /apps/{id}:
+  /apps/{app_id}:
     get:
       tags:
         - Apps
       summary: Find app by ID
       description: Returns a single app
-      operationId: getAppById
       parameters:
-        - name: id
+        - name: app_id
           in: path
           description: ID of app to return
           required: true
@@ -49,6 +49,76 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/App'
+  /installations:
+    post:
+        tags:
+          - Installation
+        summary: Create a new installation record.
+        description: Create Installation
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  app_id:
+                    type: string
+                  user_id:
+                    type: string
+        responses:
+          "201":
+            description: "Installation created"
+          "400":
+            description: "Invalid input"
+    get:
+      tags:
+          - Installation
+      summary: "List all installations"
+      parameters:
+        - in: query
+          name: user_id
+          schema:
+            type: string
+        - in: query
+          name: app_id
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "A list of installations"
+  /installations/{installation_id}:
+    get:
+      tags:
+          - Installation
+      summary: "Retrieve details of a specific installation"
+      parameters:
+        - in: path
+          name: installation_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Installation details"
+        "404":
+          description: "Installation not found"
+
+    delete:
+      tags:
+          - Installation
+      summary: "Remove a specific installation record"
+      parameters:
+        - in: path
+          name: installation_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Installation deleted"
+        "404":
+          description: "Installation not found"
 components:
   schemas:
     App:
