@@ -17,6 +17,12 @@ paths:
       tags:
         - Apps
       summary: Get all apps
+      parameters:
+        - in: query
+          name: tag
+          example: 10
+          schema:
+            type: integer
       responses:
         '200':
           description: Successful operation
@@ -32,7 +38,6 @@ paths:
       tags:
         - Apps
       summary: Find app by ID
-      description: Returns a single app
       parameters:
         - name: app_id
           in: path
@@ -78,6 +83,7 @@ paths:
       parameters:
         - in: query
           name: user_id
+          required: true
           schema:
             type: string
         - in: query
@@ -146,6 +152,12 @@ components:
         average_rating:
           type: string
           example: '4.5'
+        published_at:
+          type: string
+          example: "2023-12-04T09:56:32"
+        developer:
+          type: string
+          example: "تیم پذیرش24"
         logo:
           $ref: '#/components/schemas/Photo'
         gallery:
