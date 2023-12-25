@@ -1045,23 +1045,60 @@ paths:
 
   /v1/feedbacks:
     get:
-      summary: Retrieve feedbacks by ID that you provide it
+      summary: Retrieve feedbacks 
       description: Returns a list of feedbacks based on the provided ID
       parameters:
         - in: query
-          name: external_id
-          required: true
-          description: The external ID for the feedback.
+          name: slug
+          required: false
+          description: filter by provider slug
           schema:
             type: string
+        - in: query
+          name: user_id
+          required: false
+          description: filter by user id that commited feedback
+          schema:
+            type: integer
+        - in: query
+          name: search
+          required: false
+          description: search text on reviews description
+          schema:
+            type: string
+        - in: query
+          name: page
+          description: page number (for pagination)
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: order_by
+          description: sort feedbacks by these fields (created_at,updated_at,like)
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: no_page_limit
+          description: return feedbacks without pagination
+          required: false
+          schema:
+            type: boolean
+            example: false
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                properties:
-                  feedbacks:
+                 properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "درخواست شما با موفقیت پردازش شد"
+                  result:
                     type: array
                     items:
                       $ref: '#/components/schemas/Feedback'
@@ -1923,36 +1960,69 @@ components:
         id:
           type: integer
           example: 75
-        name:
+        user_name:
           type: string
           example: user's name
         user_id:
-          type: string
-          example: '123456789'
-        description:
-          type: string
-          example: Your feedback description here.
-        yours:
-          type: boolean
-          example: true
-        feedback_number:
           type: integer
-          example: 2
+          example: 455578
         reply_count:
           type: integer
-          example: 0
-        reply_to_feedback_number:
+          example: 25
+        doctor_encounter:
           type: integer
-          nullable: true
-          example: null
+          example: 3
+        quality_of_treatment:
+          type: integer
+          example: 4
+        explanation_of_issue:
+          type: integer
+          example: 2
+        waiting_time:
+          type: integer
+          example: 3
+        description:
+          type: string
+          example:  feedback description .
         created_at:
           type: string
-          format: date-time
-          example: '2023-10-18T09:57:37.991Z'
+          format: unix_timestamp
+          example: '1690752646'
         updated_at:
           type: string
-          format: date-time
-          example: '2023-10-18T09:57:37.991Z'
+          format: unix_timestamp
+          example: '1690752646'
+        reply: 
+          type: array
+          items:  
+            $ref: '#/components/schemas/Reply'
+    Reply:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 75
+        user_name:
+          type: string
+          example: user's name
+        user_id:
+          type: integer
+          example: 455578
+        description:
+          type: string
+          example:  feedback description .
+        created_at:
+          type: string
+          format: unix_timestamp
+          example: '1690752646'
+        updated_at:
+          type: string
+          format: unix_timestamp
+          example: '1690752646'
+        reply: 
+          type: array
+          items:  
+              {}
     SearchResult:
       type: object
       properties:
