@@ -1,0 +1,80 @@
+openapi: 3.0.0
+info:
+  title: Paziresh24 Notification API
+  version: 1.0.0
+paths:
+  /v1/notification:
+    post:
+      summary: Send a notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: The user ID
+                notification_type:
+                  type: string
+                  enum: [push]
+                  description: The type of notification (currently only "push" is supported)
+                title:
+                  type: string
+                  description: The title of the notification
+                text:
+                  type: string
+                  description: The text of the notification
+                link:
+                  type: string
+                  description: The link associated with notification
+              required:
+                - user_id
+                - notification_type
+                - title
+                - text
+                - link
+      responses:
+        '200':
+          description: Successfully sent the notification
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  multicast_id:
+                    type: integer
+                    description: The multicast ID
+                  success:
+                    type: integer
+                    description: Number of successful deliveries
+                  failure:
+                    type: integer
+                    description: Number of failed deliveries
+                  message_id:
+                    type: string
+                    description: Tracking code for the message
+        '400':
+          description: Bad request - Invalid input data or missing headers
+          content:
+            application/json:
+              example:
+                error: Bad Request
+        '401':
+          description: Unauthorized - Invalid user certificate
+          content:
+            application/json:
+              example:
+                error: Unauthorized
+
+components:
+  securitySchemes:
+    user_certificate:
+      type: apiKey
+      name: user_certificate
+      in: header
+      description: >
+        The `user_certificate` header is a unique token that grants access to the Paziresh24 Notification API.
+         To obtain your user_certificate, please contact the notification product owner by emailing (saharhoseinian.work@gmail.com) or visiting our support support@paziresh24.com
+
