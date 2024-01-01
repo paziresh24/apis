@@ -1074,10 +1074,12 @@ paths:
             type: integer
         - in: query
           name: order_by
-          description: sort feedbacks by these fields (created_at,updated_at,like)
+          description: sort feedbacks by fields 
           required: false
           schema:
             type: string
+            enum: ["created_at","updated_at","like","default_order"]
+            example: "default_order"
         - in: query
           name: no_page_limit
           description: return feedbacks without pagination
@@ -1085,6 +1087,14 @@ paths:
           schema:
             type: boolean
             example: false
+        - in: query
+          name: additional_fields
+          description: return additional fields that does not exists in feedback resource
+          required: false
+          schema:
+            type: string
+            enum: ["doctor_full_name"]
+            example: "doctor_full_name"
       responses:
         '200':
           description: Successful operation
