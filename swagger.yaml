@@ -481,7 +481,7 @@ paths:
       summary: get users informations
       description: ''
       operationId: getUsersInformation
-      parameters: 
+      parameters:
         - name: sso_id
           schema:
             $ref: '#/components/schemas/user/properties/sso_id'
@@ -1045,7 +1045,7 @@ paths:
 
   /v1/feedbacks:
     get:
-      summary: Retrieve feedbacks 
+      summary: Retrieve feedbacks
       description: Returns a list of feedbacks based on the provided ID
       parameters:
         - in: query
@@ -1057,9 +1057,15 @@ paths:
         - in: query
           name: user_id
           required: false
-          description: filter by user id that commited feedback
+          description: filter by user id that committed feedback
           schema:
             type: integer
+        - in: query
+          name: recommended
+          required: false
+          description: filter by recommended that retrieve recommended feedback
+          schema:
+            type: boolean
         - in: query
           name: search
           required: false
@@ -1074,7 +1080,7 @@ paths:
             type: integer
         - in: query
           name: order_by
-          description: sort feedbacks by fields 
+          description: sort feedbacks by fields
           required: false
           schema:
             type: string
@@ -1612,7 +1618,7 @@ components:
           description: national_code of the user
           example: '124666554'
           type: string
-        sso_id: 
+        sso_id:
           $ref: '#/components/schemas/user/properties/sso_id'
     city:
       description: city properties
@@ -1994,6 +2000,10 @@ components:
         description:
           type: string
           example:  feedback description .
+        book_date:
+          type: string
+          format: date
+          example: '2024-01-01 00:00:00'
         created_at:
           type: string
           format: unix_timestamp
@@ -2002,9 +2012,9 @@ components:
           type: string
           format: unix_timestamp
           example: '1690752646'
-        reply: 
+        reply:
           type: array
-          items:  
+          items:
             $ref: '#/components/schemas/Reply'
     Reply:
       type: object
@@ -2029,9 +2039,9 @@ components:
           type: string
           format: unix_timestamp
           example: '1690752646'
-        reply: 
+        reply:
           type: array
-          items:  
+          items:
               {}
     SearchResult:
       type: object
