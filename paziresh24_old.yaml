@@ -1,0 +1,72 @@
+openapi: 3.0.0
+info:
+  title: old paziresh24 documentation
+  version: 1.0.0
+paths:
+  /followBook:
+    post:
+      summary: Follow Book Action
+      description: |
+        Endpoint for performing actions related to booking.
+      operationId: followBookAction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                certificate:
+                  type: string
+                  description: Certificate information.
+                  example: abc123
+                ref_id:
+                  type: integer
+                  description: Reference ID for the booked appointment.
+                  example: 123
+                national_code:
+                  type: string
+                  description: Patient's national code.
+                  example: 1234567890
+                date:
+                  type: string
+                  description: Jalali date of the appointment (YYYY-MM-DD).
+                  example: 1402/01/01
+                center_id:
+                  type: string
+                  description: ID of the booking center.
+                  example: abc123
+                hid:
+                  type: string
+                  description: HID (Health ID) for the center.
+                  example: center_hid_123
+                medical_code:
+                  type: string
+                  description: Medical code for the appointment.
+                  example: MC123
+                username:
+                  type: string
+                  description: Username for authentication.
+                  example: user
+                password:
+                  type: string
+                  description: Password for authentication.
+                  example: pass
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: ''
+                  books:
+                    type: array
+                    items:
+                      type: object
