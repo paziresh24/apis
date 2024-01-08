@@ -609,7 +609,7 @@ paths:
           description: otp sent to new user cell successfuly
       tags:
         - Users
-  /doctor/slug:
+  /V1/doctor/slug:
     get:
       summary: Get doctor master slug
       description: Retrieve information for a specific doctor by their ID and server ID.
