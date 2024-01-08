@@ -609,6 +609,24 @@ paths:
           description: otp sent to new user cell successfuly
       tags:
         - Users
+  /doctor/slug:
+    get:
+      summary: Get doctor master slug
+      description: Retrieve information for a specific doctor by their ID and server ID.
+      parameters:
+        - name: doctor_id
+          in: query
+          required: true
+          description: The ID of the doctor to retrieve.
+        - name: server_id
+          in: query
+          required: true
+          description: The server ID associated with the doctor.
+      responses:
+        200:
+          $ref: '#/components/responses/Slug'
+      tags:
+        - Users
   /v1/auth/me:
     summary: fetch authenticated user record
     get:
@@ -2102,6 +2120,25 @@ components:
                 example: FAILED
               message:
                 type: string
+    Slug:
+      description: Successful response with the doctor's slug.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "SUCCESS"
+              message:
+                type: string
+                example: "درخواست شما با موفقیت پردازش شد"
+              data:
+                type: object
+                properties:
+                  slug:
+                    type: string
+                    example: "دکتر-مریم-برومند-3"
   securitySchemes:
     BearerAuth:
       type: http
