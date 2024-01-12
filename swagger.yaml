@@ -1450,19 +1450,19 @@ paths:
           description: The identifier of the document to be updated.
           schema:
             type: string
+        - name: apikey
+          in: header
+          required: true
+          description: One of the API keys defined on the application.
+          schema:
+            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              properties:
-                API_KEY:
-                  type: string
-                  description: One of the API keys defined on the application.
-                JSON_DOC:
-                  type: string
-                  description: The document to be updated in JSON format.
+              description: The document to be updated in JSON format.
       responses:
         '200':
           description: The document was successfully updated.
