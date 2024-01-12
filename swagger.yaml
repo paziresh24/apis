@@ -1436,6 +1436,64 @@ paths:
                             "expertise": [
                                 "مامایی"
                             ],'
+  /v1/search/doc/{DOC_ID}:
+    put:
+      summary: Update a single search document
+      description: This API is used to update a single search document in JSON format (all document data or some fields).
+      operationId: updateDocument
+      tags:
+        - Search
+      parameters:
+        - name: DOC_ID
+          in: path
+          required: true
+          description: The identifier of the document to be updated.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                API_KEY:
+                  type: string
+                  description: One of the API keys defined on the application.
+                JSON_DOC:
+                  type: string
+                  description: The document to be updated in JSON format.
+      responses:
+        '200':
+          description: The document was successfully updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusType:
+                    type: string
+                    example: SUCCESS
+                  details:
+                    type: string
+                    example: null
+                  entity:
+                    type: string
+                    example: null
+        '400':
+          description: Invalid JSON format of the document or invalid document ID.
+        '401':
+          description: Invalid API_KEY.
+        '402':
+          description: Plan related errors (expiry date reached, record limit reached, etc.).
+        '403':
+          description: API Key related errors (rate limit exceeded, not permitted access, etc.).
+        '404':
+          description: Index or document not found.
+        '409':
+          description: Conflict in mapping one or more fields of the document for indexing.
+        '500':
+          description: Internal server error.
   /holidays:
     get:
       summary: Retrieve official holidays
