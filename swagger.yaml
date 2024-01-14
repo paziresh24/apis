@@ -1494,6 +1494,82 @@ paths:
           description: Conflict in mapping one or more fields of the document for indexing.
         '500':
           description: Internal server error.
+  /v1/insights/availability-suggestions:
+    get:
+      summary: Get Optimal Availability Slots for online visit
+      description: Provides a list of optimal time slots for healthcare providers based on their specialty and subcategory to be available online, designed to maximize their patient outreach in online Visit.
+      tags:
+        - insights
+      operationId: getAvailabilitySuggestions
+      parameters:
+        - name: category
+          in: query
+          description: The medical specialty category of the doctor same as group_expertise in Search API (e.g., allergies, dental-oral).
+          required: true
+          schema:
+            type: string
+        - name: subcategory
+          in: query
+          description: More specific area within the medical specialty same as expertise in Search API (e.g., exp-endodontics, exp-oral-and-maxillofacial-radiology). If it is utilized by specifying a subcategory, be aware that the results will be limited to data gathered exclusively from users who have visited that specific medical expertise area 
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of optimal time slots.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        slot:
+                          type: string
+                          description: Time range of day, like (17)ISO-8601 [hh] refers to a zero-padded hour between 00 and 24.
+                        day_Of_Week:
+                          type: integer
+                          format: int32
+                          description: Suggests the day for online visit, like 7 for Sunday (ISO-8601 weekdays).
+                        estimated_score:
+                          type: integer
+                          format: int32
+                          description: Predicts score of potential patients during that time slot.
+                example:
+                  data:
+                    - slot: "17"
+                      day_Of_Week: 7
+                      estimated_score: 41
+        '400':
+          description: Bad request, such as missing required parameters.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                example:
+                  code: 400
+                  message: "Bad request: Missing required parameter 'category'"
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
   /holidays:
     get:
       summary: Retrieve official holidays
