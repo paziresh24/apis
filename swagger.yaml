@@ -2,7 +2,14 @@ openapi: 3.0.0
 info:
   title: Paziresh24 web services document
   version: '1.0'
-  description: Health system platform to connect patients to providers
+  description: |
+    Online health platform to connect patients to providers.
+
+    For further assistance and community support, please visit our:
+    - [Eyvan : Paziresh24 developers Community Forum](https://community.paziresh24.com/)
+    - [Ticketing Support Portal](https://support.paziresh24.com/)
+
+    We encourage you to join our community forum to discuss, share ideas, and collaborate with other developers. If you need direct support, our ticketing portal is available to assist you with any specific issues or questions.
   termsOfService: https://www.paziresh24.com/home/rules/
   contact:
     email: info@paziresh24.com
