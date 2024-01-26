@@ -1397,52 +1397,52 @@ paths:
                           search_engine_response:
                             type: string
                             example: '{
-                "totalHits": 65731,
-                "searchTime": 184,
-                "queryId": "366937A1AB51761A",
-                "results": [
-                    {
-                        "indexName": "slim_clinic",
-                        "documentId": "doctor_98a72fbc-f32b-41e9-b6e2-c498768e09e8_1",
-                        "documentInfo": {
-                            "NumberOfWords": 1,
-                            "Distance": 0,
-                            "Position": 2,
-                            "NumberOfExactMatch": 1,
-                            "ExactMatch": false,
-                            "DocRank": 0
-                        },
-                        "beforePersonalizationPosition": 0,
-                        "pinned": false,
-                        "contentRankingDetails": null,
-                        "source": {
-                            "expertises": [
-                                {
-                                    "degree": {
-                                        "name": "کارشناس",
-                                        "id": 2
-                                    },
-                                    "expertise": {
-                                        "name": "مامایی"
-                                    },
-                                    "expertise_groups": [
-                                        {
-                                            "name": "زنان، زایمان و نازایی"
-                                        },
-                                        {
-                                            "name": "زنان، زایمان و نازایی"
-                                        }
-                                    ],
-                                    "alias_title": "مراقب دوران بارداری-مشاوره ودرمان عفونت های زنان-پاپ اسمیر-آموزش بهداشت فردی-آموزش نحوه صحیح شیردهی"
-                                }
-                            ],
-                            "presence_freeturn": 1700293500,
-                            "prefix": "دکتر",
-                            "prescription_waiting_time_wilson_score": 1.1432334426561412,
-                            "online_visit_waiting_time_wilson_score": 1.1,
-                            "expertise": [
-                                "مامایی"
-                            ],'
+                                          "totalHits": 65731,
+                                          "searchTime": 184,
+                                          "queryId": "366937A1AB51761A",
+                                          "results": [
+                                              {
+                                                  "indexName": "slim_clinic",
+                                                  "documentId": "doctor_98a72fbc-f32b-41e9-b6e2-c498768e09e8_1",
+                                                  "documentInfo": {
+                                                      "NumberOfWords": 1,
+                                                      "Distance": 0,
+                                                      "Position": 2,
+                                                      "NumberOfExactMatch": 1,
+                                                      "ExactMatch": false,
+                                                      "DocRank": 0
+                                                  },
+                                                  "beforePersonalizationPosition": 0,
+                                                  "pinned": false,
+                                                  "contentRankingDetails": null,
+                                                  "source": {
+                                                      "expertises": [
+                                                          {
+                                                              "degree": {
+                                                                  "name": "کارشناس",
+                                                                  "id": 2
+                                                              },
+                                                              "expertise": {
+                                                                  "name": "مامایی"
+                                                              },
+                                                              "expertise_groups": [
+                                                                  {
+                                                                      "name": "زنان، زایمان و نازایی"
+                                                                  },
+                                                                  {
+                                                                      "name": "زنان، زایمان و نازایی"
+                                                                  }
+                                                              ],
+                                                              "alias_title": "مراقب دوران بارداری-مشاوره ودرمان عفونت های زنان-پاپ اسمیر-آموزش بهداشت فردی-آموزش نحوه صحیح شیردهی"
+                                                          }
+                                                      ],
+                                                      "presence_freeturn": 1700293500,
+                                                      "prefix": "دکتر",
+                                                      "prescription_waiting_time_wilson_score": 1.1432334426561412,
+                                                      "online_visit_waiting_time_wilson_score": 1.1,
+                                                      "expertise": [
+                                                          "مامایی"
+                                                      ],'
   /v1/search/doc/{DOC_ID}:
     put:
       summary: Update a single search document
@@ -1577,6 +1577,65 @@ paths:
                     format: int32
                   message:
                     type: string
+  /v1/insights/api-performance-metrics:
+    get:
+      summary: API Performance Metrics
+      description: Retrieves performance and uptime metrics for API products in the Paziresh24 ecosystem.
+      tags:
+        - insights
+      operationId: getApiPerformanceMetrics
+      parameters:
+        - name: route_pattern
+          in: query
+          required: true
+          description: The route pattern to filter the metrics.
+          schema:
+            type: string
+            example: '*search/doc*'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Average_Response_Time:
+                          type: string
+                          description: Average response time in milliseconds.
+                        Maximum_Response_Time:
+                          type: string
+                          description: Maximum response time in milliseconds.
+                        ClientErrors:
+                          type: string
+                          description: Number of client errors.
+                        ServerErrors:
+                          type: string
+                          description: Number of server errors.
+                        Total_Requests:
+                          type: string
+                          description: Total number of requests.
+                        Uptime_Percentage:
+                          type: string
+                          description: Uptime percentage.
+                    example:
+                      - Average_Response_Time: "706"
+                        Maximum_Response_Time: "6013"
+                        ClientErrors: "0"
+                        ServerErrors: "1"
+                        Total_Requests: "10224"
+                        Uptime_Percentage: "100"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
   /holidays:
     get:
       summary: Retrieve official holidays
