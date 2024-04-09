@@ -1,0 +1,285 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "وب سرویس های پرداخت پذیرش24",
+    "description": "",
+    "termsOfService": "https://www.paziresh24.com/home/rules/",
+    "contact": {
+      "email": "h.sadeghynejad@gmail.com",
+      "name": "hamed sadeghinezhad"
+    },
+    "license": {
+      "name": "",
+      "url": ""
+    },
+    "version": "0.1"
+  },
+  "externalDocs": {
+    "description": "",
+    "url": ""
+  },
+  "servers": [
+    {
+      "url": "https://payment.paziresh24.com/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Payment",
+      "description": "",
+      "externalDocs": {
+        "description": "",
+        "url": ""
+      }
+    }
+  ],
+  "paths": {
+    "/payment": {
+      "post": {
+        "summary": "پرداخت",
+        "description": "با اجرای این وب سرویس، صفحه کاربر به صفحه پرداخت ریدایرکت میشود، بعد از اجرای فرآیند پرداخت توسط کاربر، مبلغ دریافتی به عنوان دو رکورد مجزا، به ترتیب برای افزایش و کسر از کیف پول، با عناوین \"شارژ کیف پول\" و \"{عنوان پرداخت}\" در کیف پول پرداخت کننده ثبت خواهد شده و سپس یک رکورد شارژ کیف پول برای دریافت کننده (ها) با عنوان \"{عنوان پرداخت}\" ثبت خواهد شد، در نهایت به آدرس مشخص شده ریدایرکت خواهد شد",
+        "operationId": "createPayment",
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Payment"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PaymentResponse"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "requestBodies": {
+      "Payment": {
+        "description": "request new payment",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "amount": {
+                  "type": "number",
+                  "description": "مبلغ تراکنش"
+                },
+                "customer_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "default": "394dd280-210f-11ec-96d5-95b80dce5a5a",
+                  "description": "شناسه مشتری (user_id)"
+                },
+                "receiver_wallets": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "amount": {
+                        "type": "number",
+                        "description": "مجموع مبالغ باید با مبلغ تراکنش برابر باشد"
+                      },
+                      "receiver_id": {
+                        "type": "string",
+                        "description": "شناسه دریافت کننده (user_id)"
+                      },
+                      "wallet_id": {
+                        "type": "string",
+                        "description": "شناسه کیف پول دریافت کننده"
+                      },
+                      "tax": {
+                        "type": "boolean",
+                        "description": "مالیات ارزش افزوده برای این آیتم محاسبه شود؟",
+                        "default": false
+                      }
+                    },
+                    "required": [
+                      "amount"
+                    ],
+                    "description": "وجود یکی از فیلدهای receiver_id یا wallet_id در هر آیتم اجباری میباشد"
+                  },
+                  "description": "دریافت کنندگان مبلغ"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "عنوان صفحه پرداخت"
+                },
+                "callback": {
+                  "type": "string",
+                  "format": "uri",
+                  "default": "https://www.paziresh24.com/book/5/paied",
+                  "description": "آدرس صفحه برگشت از پرداخت"
+                }
+              },
+              "required": [
+                "amount",
+                "customer_id",
+                "receiver_wallets",
+                "title",
+                "callback"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "petstore_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
+            "scopes": {
+              "write:pets": "modify pets in your account",
+              "read:pets": "read your pets"
+            }
+          }
+        }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    },
+    "responses": {
+      "PaymentResponse": {
+        "description": "",
+        "headers": {},
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "description": "وضعیت فرآیند پرداخت (0 پرداخت موفق، 1 پرداخت خطا خورده)",
+                  "default": 1
+                },
+                "amount": {
+                  "type": "number",
+                  "description": "مبلغ تراکنش"
+                },
+                "transaction_id": {
+                  "type": "number",
+                  "default": 159178352177,
+                  "description": "شناسه تراکنش"
+                }
+              },
+              "required": [
+                "status",
+                "amount",
+                "transaction_id",
+                "message"
+              ]
+            }
+          }
+        }
+      },
+      "Transactions": {
+        "description": "ریز تراکنش های یک مشتری",
+        "headers": {},
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "شناسه تراکنش کیف پول",
+                    "format": "uuid",
+                    "default": "394dd280-210f-11ec-96d5-95b80dce5a5a"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "description": "مبلغ تراکنش",
+                    "default": -1000
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "نوع تراکنش",
+                    "enum": [
+                      "withdrow",
+                      "deposit"
+                    ]
+                  },
+                  "balance": {
+                    "type": "number",
+                    "description": "موجودی کیف پول بعد از انجام تراکنش"
+                  },
+                  "create_at": {
+                    "type": "string",
+                    "description": "زمان انجام تراکنش",
+                    "format": "date-time",
+                    "default": "1400/10/05 11:32"
+                  }
+                },
+                "required": [
+                  "uuid",
+                  "amount",
+                  "type",
+                  "balance",
+                  "create_at"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Customer": {
+        "description": "اطلاعات مشتری",
+        "headers": {},
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "description": "شناسه یکتای مشتری"
+                },
+                "name": {
+                  "type": "string",
+                  "default": "علی تقوی"
+                },
+                "balance": {
+                  "type": "number",
+                  "description": "موجودی کیف پول مشتری"
+                },
+                "mobile": {
+                  "type": "string"
+                },
+                "create_at": {
+                  "type": "string",
+                  "description": "زمان ساخت رکورد مشتری",
+                  "default": "1400/07/07 13:53",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "field_0"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "customer_id": {
+        "in": "path",
+        "required": false,
+        "description": "شناسه یکتای مشتری",
+        "schema": {
+          "type": "string"
+        },
+        "name": "customer_id"
+      }
+    }
+  }
+}
