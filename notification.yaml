@@ -1,80 +1,57 @@
 openapi: 3.0.0
 info:
-  title: Paziresh24 Notification API
-  version: 1.0.0
+  description: "API documentation for sending push notifications to Paziresh24 users."
+  version: "1.0.0"
+  title: "Paziresh24 Push Notification API"
+servers:
+  - url: "https://apigw.paziresh24.com"
 paths:
-  /v1/notification:
+  /v1/notification/push:
     post:
-      summary: Send a notification
+      summary: "Send a Push Notification"
+      description: "This endpoint sends a push notification to a specific Paziresh24 user."
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
+              type: "object"
               properties:
                 user_id:
-                  type: string
-                  description: The user ID
-                notification_type:
-                  type: string
-                  enum: [push]
-                  description: The type of notification (currently only "push" is supported)
+                  type: "string"
+                  description: "Unique identifier of the user to receive the notification."
                 title:
-                  type: string
-                  description: The title of the notification
+                  type: "string"
+                  description: "Title of the push notification."
                 text:
-                  type: string
-                  description: The text of the notification
+                  type: "string"
+                  description: "Text content of the push notification."
                 link:
-                  type: string
-                  description: The link associated with notification
+                  type: "string"
+                  description: "URL to be included in the notification, if any."
+                image:
+                  type: "string"
+                  description: "URL of an image to be included in the notification."
+                date:
+                  type: "string"
+                  description: "Unix timestamp when the notification is scheduled to be sent, formatted as a string."
               required:
                 - user_id
-                - notification_type
                 - title
                 - text
-                - link
       responses:
-        '200':
-          description: Successfully sent the notification
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  multicast_id:
-                    type: integer
-                    description: The multicast ID
-                  success:
-                    type: integer
-                    description: Number of successful deliveries
-                  failure:
-                    type: integer
-                    description: Number of failed deliveries
-                  message_id:
-                    type: string
-                    description: Tracking code for the message
-        '400':
-          description: Bad request - Invalid input data or missing headers
-          content:
-            application/json:
-              example:
-                error: Bad Request
+        '202':
+          description: "Request accepted."
         '401':
-          description: Unauthorized - Invalid user certificate
-          content:
-            application/json:
-              example:
-                error: Unauthorized
-
+          description: "Unauthorized - Invalid authorization."
+      security:
+        - authorizations: []
 components:
   securitySchemes:
-    user_certificate:
+    authorizations:
       type: apiKey
-      name: user_certificate
       in: header
-      description: >
-        The `user_certificate` header is a unique token that grants access to the Paziresh24 Notification API.
-         To obtain your user_certificate, please contact the notification product owner by emailing (saharhoseinian.work@gmail.com) or visiting our support support@paziresh24.com
-
+      name: token
+      description: "The `authorizations` header is a unique token that grants access to the Paziresh24 Notification API. To obtain your authorization, please contact our support at support@paziresh24.com."
+security:
+  - authorizations: []
