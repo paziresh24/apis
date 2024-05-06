@@ -31,13 +31,21 @@
         "description": "",
         "url": ""
       }
+    },
+    {
+      "name": "Customer",
+      "description": "",
+      "externalDocs": {
+        "description": "",
+        "url": ""
+      }
     }
   ],
   "paths": {
     "/payment": {
       "post": {
-        "summary": "پرداخت",
-        "description": "با اجرای این وب سرویس، صفحه کاربر به صفحه پرداخت ریدایرکت میشود، بعد از اجرای فرآیند پرداخت توسط کاربر، مبلغ دریافتی به عنوان دو رکورد مجزا، به ترتیب برای افزایش و کسر از کیف پول، با عناوین \"شارژ کیف پول\" و \"{عنوان پرداخت}\" در کیف پول پرداخت کننده ثبت خواهد شده و سپس یک رکورد شارژ کیف پول برای دریافت کننده (ها) با عنوان \"{عنوان پرداخت}\" ثبت خواهد شد، در نهایت به آدرس مشخص شده ریدایرکت خواهد شد",
+        "summary": "payment",
+        "description": "انتقال کاربر به صفحه پرداخت و واریز وجه پرداخت شده به حساب دریافت کننده[گان]\nبا اجرای این وب سرویس، صفحه کاربر به صفحه پرداخت ریدایرکت میشود، بعد از اجرای فرآیند پرداخت توسط کاربر، مبلغ دریافتی به عنوان دو رکورد مجزا، به ترتیب برای افزایش و کسر از کیف پول، با عناوین \"شارژ کیف پول\" و \"{عنوان پرداخت}\" در کیف پول پرداخت کننده ثبت خواهد شده و سپس یک رکورد شارژ کیف پول برای دریافت کننده (ها) با عنوان \"{عنوان پرداخت}\" ثبت خواهد شد، در نهایت به آدرس مشخص شده ریدایرکت خواهد شد",
         "operationId": "createPayment",
         "tags": [
           "Payment"
@@ -49,6 +57,116 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/PaymentResponse"
+          }
+        }
+      }
+    },
+    "/customer": {
+      "get": {
+        "summary": "customer",
+        "description": "شناسه کاربر یا کدملی کاربر را به عنوان ورودی دریافت میکند، در صورتی که حساب داشته باشد اطلاعات حساب برگردانده میشود و در صورت عدم وجود حساب یک حساب برای کاربر ساخته شده و اطلاعات حساب برگردانده میشود",
+        "operationId": "getCustomerInfo",
+        "tags": [
+          "Customer"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "user_id",
+            "description": "شناسه یکتای کاربر",
+            "schema": {
+              "type": "number",
+              "default": 123
+            }
+          },
+          {
+            "in": "query",
+            "name": "customer_id",
+            "description": "شناسه مشتری",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "default": "82ed3de0-ffc4-11ee-ae85-137021a2190c"
+            }
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Customer"
+          }
+        }
+      },
+      "parameters": []
+    },
+    "/deposit": {
+      "post": {
+        "summary": "deposit",
+        "description": "این وب سرویس جهت واریز وجه به کیف پول مشتری می باشد، با اعلام شناسه مشتری و مبلغ مورد نظر، صفحه به آدرس پرداخت بانک ریدایرکت شده و پس از پرداخت، مبلغ پرداخت شده به حساب کیف پول مشتری واریز میشود\n* هزینه کارمزد پرداخت و کارمزد شاپرک از مبلغ پرداخت شده کسر میگردد",
+        "operationId": "",
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "customer_id",
+            "description": "شناسه مشتری",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "default": "82ed3de0-ffc4-11ee-ae85-137021a2190c"
+            }
+          },
+          {
+            "in": "query",
+            "name": "amount",
+            "description": "مبلغ مورد نظر جهت افزایش موجودی کیف پول مشتری",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "آدرس مقصد بعد از افزایش موجودی کیف پول",
+            "schema": {
+              "type": "string",
+              "format": "uri",
+              "default": "https://p24-n8n-payment.darkube.app/webhook-test/payment/deposited"
+            }
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DepositResponse"
+          }
+        }
+      }
+    },
+    "/refund": {
+      "get": {
+        "summary": "refund",
+        "description": "",
+        "operationId": "getRefundDetails",
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "ref_id",
+            "description": "کد پیگیری نوبت",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RefundResponse"
           }
         }
       }
@@ -68,13 +186,13 @@
                   "type": "number",
                   "description": "مبلغ تراکنش"
                 },
-                "customer_id": {
+                "payer": {
                   "type": "string",
                   "format": "uuid",
                   "default": "394dd280-210f-11ec-96d5-95b80dce5a5a",
                   "description": "شناسه مشتری (user_id)"
                 },
-                "receiver_wallets": {
+                "payee": {
                   "type": "array",
                   "items": {
                     "type": "object",
@@ -83,7 +201,7 @@
                         "type": "number",
                         "description": "مجموع مبالغ باید با مبلغ تراکنش برابر باشد"
                       },
-                      "receiver_id": {
+                      "payee_id": {
                         "type": "string",
                         "description": "شناسه دریافت کننده (user_id)"
                       },
@@ -99,10 +217,9 @@
                     },
                     "required": [
                       "amount"
-                    ],
-                    "description": "وجود یکی از فیلدهای receiver_id یا wallet_id در هر آیتم اجباری میباشد"
+                    ]
                   },
-                  "description": "دریافت کنندگان مبلغ"
+                  "description": "وجود یکی از فیلدهای payee_id یا wallet_id در هر آیتم اجباری میباشد"
                 },
                 "title": {
                   "type": "string",
@@ -117,8 +234,8 @@
               },
               "required": [
                 "amount",
-                "customer_id",
-                "receiver_wallets",
+                "payer",
+                "payee",
                 "title",
                 "callback"
               ]
@@ -240,13 +357,16 @@
             "schema": {
               "type": "object",
               "properties": {
-                "uuid": {
+                "id": {
                   "type": "string",
                   "description": "شناسه یکتای مشتری"
                 },
-                "name": {
+                "first_name": {
                   "type": "string",
                   "default": "علی تقوی"
+                },
+                "last_name": {
+                  "type": "string"
                 },
                 "balance": {
                   "type": "number",
@@ -263,7 +383,145 @@
                 }
               },
               "required": [
-                "field_0"
+                "mobile1"
+              ]
+            }
+          }
+        }
+      },
+      "DepositResponse": {
+        "description": "در صورت عدم ارسال callback در پارامترهای ورودی، این نتیجه برگردانده خواهد شد",
+        "headers": {},
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "description": "1: پرداخت موفق"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "balance": {
+                  "type": "number",
+                  "description": "موجودی کیف پول مشتری بعد از افزایش موجودی"
+                }
+              },
+              "required": [
+                "status",
+                "message",
+                "balance"
+              ]
+            }
+          }
+        }
+      },
+      "RefundResponse": {
+        "description": "",
+        "headers": {},
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "doctor": {
+                  "type": "string",
+                  "description": "نام پزشک"
+                },
+                "doctor_cell": {
+                  "type": "string",
+                  "description": "شماره موبایل پزشک"
+                },
+                "patient": {
+                  "type": "string",
+                  "description": "نام بیمار"
+                },
+                "patient_cell": {
+                  "type": "string",
+                  "description": "شماره موبایل بیمار"
+                },
+                "book_from": {
+                  "type": "string",
+                  "description": "زمان نوبت"
+                },
+                "book_insert_at": {
+                  "type": "string",
+                  "description": "زمان ثبت نوبت"
+                },
+                "payment_status": {
+                  "type": "string",
+                  "description": "کد وضعیت پراخت نوبت"
+                },
+                "payment_status_title": {
+                  "type": "string",
+                  "description": "عنوان وضعیت پرداخت نوبت"
+                },
+                "insert_refund_at": {
+                  "type": "string",
+                  "description": "زمان ثبت درخواست بازگشت وجه"
+                },
+                "refund_status": {
+                  "type": "string",
+                  "description": "کد وضعیت ثبت شده از درخواست بازگشت وجه داخل پذیرش24"
+                },
+                "refund_description": {
+                  "type": "string",
+                  "description": "وضعیت ثبت شده از درخواست بازگشت وجه داخل پذیرش24"
+                },
+                "refund_refrence_id": {
+                  "type": "string",
+                  "description": "کدپیگیری درخواست بازگشت وجه از بانک"
+                },
+                "amount": {
+                  "type": "string",
+                  "description": "مبلغ بازگشت وجه"
+                },
+                "destination_card_holder_name": {
+                  "type": "string",
+                  "description": "صاحب کارت مقصد بازگشت وجه"
+                },
+                "detail_destination_PAN": {
+                  "type": "string",
+                  "description": "کارت مقصد بازگشت وجه"
+                },
+                "detail_refnum": {
+                  "type": "string",
+                  "description": "کدپیگیری تراکنش بازگشت وجه"
+                },
+                "refund_date": {
+                  "type": "string",
+                  "description": "زمان بازگشت وجه"
+                },
+                "detail_status_code": {
+                  "type": "string",
+                  "description": "وضعیت درخواست بازگشت وجه داخل بانک سامان"
+                },
+                "detail_status_code_title": {
+                  "type": "string",
+                  "description": "شرح وضعیت درخواست بازگشت وجه داخل بانک سامان"
+                }
+              },
+              "required": [
+                "doctor",
+                "doctor_cell",
+                "patient_cell",
+                "book_from",
+                "book_insert_at",
+                "payment_status",
+                "payment_status_title",
+                "insert_refund_at",
+                "refund_status",
+                "refund_description",
+                "refund_refrence_id",
+                "amount",
+                "destination_card_holder_name",
+                "detail_destination_PAN",
+                "detail_refnum",
+                "refund_date",
+                "detail_status_code",
+                "detail_status_code_title"
               ]
             }
           }
