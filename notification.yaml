@@ -1,12 +1,12 @@
 openapi: 3.0.0
 info:
-  description: "API documentation for sending push notifications to Paziresh24 users."
+  description: "API documentation for sending and tracking push notifications to Paziresh24 users."
   version: "1.0.0"
   title: "Paziresh24 Push Notification API"
 servers:
-  - url: "https://apigw.paziresh24.com"
+  - url: "https://apigw.paziresh24.com/v1"
 paths:
-  /v1/notification/push:
+  /notification/push:
     post:
       summary: "Send a Push Notification"
       description: "This endpoint sends a push notification to a specific Paziresh24 user."
@@ -19,31 +19,77 @@ paths:
               properties:
                 user_id:
                   type: "string"
-                  description: "Unique identifier of the user to receive the notification."
+                  description: "The unique identifier of the user who will receive the notification."
                 title:
                   type: "string"
-                  description: "Title of the push notification."
+                  description: "The title of the push notification, which will appear in bold."
                 text:
                   type: "string"
-                  description: "Text content of the push notification."
+                  description: "The main content of the push notification."
                 link:
                   type: "string"
-                  description: "URL to be included in the notification, if any."
+                  description: "A URL that can be included in the notification to direct the user to a specific webpage."
                 image:
                   type: "string"
-                  description: "URL of an image to be included in the notification."
+                  description: "A URL to an image that can be included in the notification."
                 date:
                   type: "string"
-                  description: "Unix timestamp when the notification is scheduled to be sent, formatted as a string."
+                  description: "The Unix timestamp (formatted as a string) indicating when the notification is scheduled to be sent."
+                tracker_id:
+                  type: "string"
+                  description: "A unique identifier assigned by the client for tracking, deleting, or updating the notification."
+                tag:
+                  type: "string"
+                  description: "A tag used to categorize the notification, allowing it to be grouped and searched after being sent."
+                client:
+                  type: "string"
+                  description: "The identifier of the client sending the notification."
               required:
                 - user_id
                 - title
                 - text
       responses:
         '202':
-          description: "Request accepted."
+          description: "The request has been accepted and the notification will be processed."
         '401':
-          description: "Unauthorized - Invalid authorization."
+          description: "Unauthorized request due to invalid or missing authorization token."
+      security:
+        - authorizations: []
+  /notification/push/status:
+    get:
+      summary: "Get Push Notification Status"
+      description: "This endpoint allows clients to check the status of their push notifications."
+      parameters:
+        - name: client
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "The identifier of the client who sent the notification."
+        - name: tag
+          in: query
+          schema:
+            type: string
+          description: "The tag used to categorize the notification, allowing it to be grouped and searched."
+        - name: user_id
+          in: query
+          schema:
+            type: string
+          description: "The unique identifier of the user who received the notification."
+        - name: tracking_id
+          in: query
+          schema:
+            type: string
+          description: "The unique identifier assigned by the client for tracking the notification."
+      responses:
+        '200':
+          description: "Notification status retrieved successfully."
+        '400':
+          description: "Bad request due to missing or invalid parameters."
+        '401':
+          description: "Unauthorized request due to invalid or missing authorization token."
+        '404':
+          description: "Notification not found."
       security:
         - authorizations: []
 components:
@@ -52,6 +98,6 @@ components:
       type: apiKey
       in: header
       name: token
-      description: "The `authorizations` header is a unique token that grants access to the Paziresh24 Notification API. To obtain your authorization, please contact our support at support@paziresh24.com."
+      description: "The `authorizations` header contains a unique token that grants access to the Paziresh24 Notification API. To obtain your authorization token, please contact our support at support@paziresh24.com."
 security:
   - authorizations: []
