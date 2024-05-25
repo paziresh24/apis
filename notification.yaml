@@ -59,33 +59,38 @@ paths:
     get:
       summary: "Get Push Notification Status"
       description: "This endpoint allows clients to check the status of their push notifications."
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: "object"
-              properties:
-                client:
-                  type: "string"
-                  description: "The identifier of the client who sent the notification."
-                tag:
-                  type: "string"
-                  description: "The tag used to categorize the notification, allowing it to be grouped and searched."
-                user_id:
-                  type: "string"
-                  description: "The unique identifier of the user who received the notification."
-                tracking_id:
-                  type: "string"
-                  description: "The unique identifier assigned by the client for tracking the notification."
-                title:
-                  type: "string"
-                  description: "The title of the push notification."
-                text:
-                  type: "string"
-                  description: "The main content of the push notification."
-              required:
-                - client
+      parameters:
+        - name: client
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "The identifier of the client who sent the notification."
+        - name: tag
+          in: query
+          schema:
+            type: string
+          description: "The tag used to categorize the notification, allowing it to be grouped and searched."
+        - name: user_id
+          in: query
+          schema:
+            type: string
+          description: "The unique identifier of the user who received the notification."
+        - name: tracking_id
+          in: query
+          schema:
+            type: string
+          description: "The unique identifier assigned by the client for tracking the notification."
+        - name: title
+          in: query
+          schema:
+            type: string
+          description: "The title of the push notification."
+        - name: text
+          in: query
+          schema:
+            type: string
+          description: "The main content of the push notification."
       responses:
         '200':
           description: "Notification status retrieved successfully."
