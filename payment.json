@@ -44,8 +44,8 @@
   "paths": {
     "/payment": {
       "post": {
-        "summary": "payment",
-        "description": "انتقال کاربر به صفحه پرداخت و واریز وجه پرداخت شده به حساب دریافت کننده[گان]\nبا اجرای این وب سرویس، صفحه کاربر به صفحه پرداخت ریدایرکت میشود، بعد از اجرای فرآیند پرداخت توسط کاربر، مبلغ دریافتی به عنوان دو رکورد مجزا، به ترتیب برای افزایش و کسر از کیف پول، با عناوین \"شارژ کیف پول\" و \"{عنوان پرداخت}\" در کیف پول پرداخت کننده ثبت خواهد شده و سپس یک رکورد شارژ کیف پول برای دریافت کننده (ها) با عنوان \"{عنوان پرداخت}\" ثبت خواهد شد، در نهایت به آدرس مشخص شده ریدایرکت خواهد شد",
+        "summary": "payment flow",
+        "description": "این وب سرویس پرداخت یک کالا می باشد، در آن پرداخت کننده و حساب مقصد مشخص میشود، سپس پرداخت کننده به میزان کسر موجودی کیف پولش را افزایش موجودی میزند سپس با توجه به مبلغ درخواستی کسر موجودی خورده و معادل مبلغ کیف پول مقصد افزایش موجودی میخورد",
         "operationId": "createPayment",
         "tags": [
           "Payment"
@@ -102,7 +102,7 @@
     "/deposit": {
       "post": {
         "summary": "deposit",
-        "description": "این وب سرویس جهت واریز وجه به کیف پول مشتری می باشد، با اعلام شناسه مشتری و مبلغ مورد نظر، صفحه به آدرس پرداخت بانک ریدایرکت شده و پس از پرداخت، مبلغ پرداخت شده به حساب کیف پول مشتری واریز میشود\n* هزینه کارمزد پرداخت و کارمزد شاپرک از مبلغ پرداخت شده کسر میگردد",
+        "description": "این وب سرویس جهت واریز وجه به کیف پول مشتری می باشد، با اعلام شناسه مشتری و مبلغ مورد نظر، صفحه به آدرس پرداخت بانک ریدایرکت شده و پس از پرداخت، مبلغ پرداخت شده به حساب کیف پول مشتری واریز میشود\n\n* هزینه کارمزد پرداخت و کارمزد شاپرک از مبلغ پرداخت شده کسر میگردد",
         "operationId": "",
         "tags": [
           "Payment"
@@ -132,8 +132,7 @@
             "description": "آدرس مقصد بعد از افزایش موجودی کیف پول",
             "schema": {
               "type": "string",
-              "format": "uri",
-              "default": "https://p24-n8n-payment.darkube.app/webhook-test/payment/deposited"
+              "format": "uri"
             }
           }
         ],
@@ -148,7 +147,7 @@
     "/refund": {
       "get": {
         "summary": "refund",
-        "description": "",
+        "description": "در صورتی که وضعیت نوبت پرداخت شده باشد، اطلاعات وضعیت بازگشت وجه در نظر گرفته نشود",
         "operationId": "getRefundDetails",
         "tags": [
           "Payment"
@@ -168,6 +167,62 @@
           "200": {
             "$ref": "#/components/responses/RefundResponse"
           }
+        },
+        "deprecated": true
+      }
+    },
+    "/transfer": {
+      "post": {
+        "summary": "transfer",
+        "description": "انتقال پول از یک کیف پول به کیف پول (های) دیگر (با امکان تسهیم)",
+        "operationId": "transfer",
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Transfer"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Transfer"
+          }
+        }
+      }
+    },
+    "/transactions": {
+      "get": {
+        "summary": "transactions",
+        "description": "لیست تراکنش های مالی یک کاربر را برمیگرداند",
+        "operationId": "getCustomerTransactions",
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "customer_id",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Transactions"
+          }
         }
       }
     }
@@ -186,44 +241,19 @@
                   "type": "number",
                   "description": "مبلغ تراکنش"
                 },
-                "payer": {
+                "user_id": {
                   "type": "string",
                   "format": "uuid",
                   "default": "394dd280-210f-11ec-96d5-95b80dce5a5a",
-                  "description": "شناسه مشتری (user_id)"
+                  "description": "شناسه پرداخت کننده (user_id)"
                 },
-                "payee": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "amount": {
-                        "type": "number",
-                        "description": "مجموع مبالغ باید با مبلغ تراکنش برابر باشد"
-                      },
-                      "payee_id": {
-                        "type": "string",
-                        "description": "شناسه دریافت کننده (user_id)"
-                      },
-                      "wallet_id": {
-                        "type": "string",
-                        "description": "شناسه کیف پول دریافت کننده"
-                      },
-                      "tax": {
-                        "type": "boolean",
-                        "description": "مالیات ارزش افزوده برای این آیتم محاسبه شود؟",
-                        "default": false
-                      }
-                    },
-                    "required": [
-                      "amount"
-                    ]
-                  },
-                  "description": "وجود یکی از فیلدهای payee_id یا wallet_id در هر آیتم اجباری میباشد"
-                },
-                "title": {
+                "destination": {
                   "type": "string",
-                  "description": "عنوان صفحه پرداخت"
+                  "description": "شناسه مربوط به کیف پول مقصد"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "شرح مربوط به پرداخت"
                 },
                 "callback": {
                   "type": "string",
@@ -234,10 +264,56 @@
               },
               "required": [
                 "amount",
-                "payer",
-                "payee",
-                "title",
+                "user_id",
+                "destination",
+                "description",
                 "callback"
+              ]
+            }
+          }
+        }
+      },
+      "Transfer": {
+        "required": false,
+        "description": "",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "payees": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "amount": {
+                        "type": "string"
+                      },
+                      "customer_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "amount",
+                      "customer_id"
+                    ]
+                  }
+                },
+                "amount": {
+                  "type": "string"
+                },
+                "payeer": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "payees",
+                "amount",
+                "payeer",
+                "description"
               ]
             }
           }
@@ -265,7 +341,7 @@
     },
     "responses": {
       "PaymentResponse": {
-        "description": "",
+        "description": "در صورتی که در پارامترهای ورودی مقدار callback مشخص شده باشد، به صفحه مربوطه ریدایرکت میشود در غیر این صورت این خروجی را برمیگرداند",
         "headers": {},
         "content": {
           "application/json": {
@@ -274,23 +350,22 @@
               "properties": {
                 "status": {
                   "type": "number",
-                  "description": "وضعیت فرآیند پرداخت (0 پرداخت موفق، 1 پرداخت خطا خورده)",
+                  "description": "وضعیت فرآیند پرداخت (0 پرداخت نا موفق، 1 پرداخت موفق)",
                   "default": 1
                 },
                 "amount": {
                   "type": "number",
                   "description": "مبلغ تراکنش"
                 },
-                "transaction_id": {
+                "message": {
                   "type": "number",
-                  "default": 159178352177,
-                  "description": "شناسه تراکنش"
+                  "default": 159178352177
                 }
               },
               "required": [
                 "status",
                 "amount",
-                "transaction_id",
+                "message",
                 "message"
               ]
             }
@@ -303,48 +378,78 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "uuid": {
-                    "type": "string",
-                    "description": "شناسه تراکنش کیف پول",
-                    "format": "uuid",
-                    "default": "394dd280-210f-11ec-96d5-95b80dce5a5a"
-                  },
-                  "amount": {
-                    "type": "number",
-                    "description": "مبلغ تراکنش",
-                    "default": -1000
-                  },
-                  "type": {
-                    "type": "string",
-                    "description": "نوع تراکنش",
-                    "enum": [
-                      "withdrow",
-                      "deposit"
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "uuid": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "\"deposit\" OR \"withdraw\""
+                      },
+                      "amount": {
+                        "type": "number"
+                      },
+                      "comment": {
+                        "type": "string"
+                      },
+                      "balance": {
+                        "type": "string",
+                        "description": "مانده بعد از تراکنش"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "updated_at": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "uuid",
+                      "type",
+                      "amount",
+                      "comment",
+                      "balance",
+                      "created_at",
+                      "updated_at"
                     ]
-                  },
-                  "balance": {
-                    "type": "number",
-                    "description": "موجودی کیف پول بعد از انجام تراکنش"
-                  },
-                  "create_at": {
-                    "type": "string",
-                    "description": "زمان انجام تراکنش",
-                    "format": "date-time",
-                    "default": "1400/10/05 11:32"
                   }
                 },
-                "required": [
-                  "uuid",
-                  "amount",
-                  "type",
-                  "balance",
-                  "create_at"
-                ]
-              }
+                "current_page": {
+                  "type": "string"
+                },
+                "last_page": {
+                  "type": "string"
+                },
+                "per_page": {
+                  "type": "string"
+                },
+                "from_record": {
+                  "type": "string"
+                },
+                "to_record": {
+                  "type": "string"
+                },
+                "total_record": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "data",
+                "current_page",
+                "current_page",
+                "last_page",
+                "per_page",
+                "from_record",
+                "to_record",
+                "total_record"
+              ]
             }
           }
         }
@@ -522,6 +627,31 @@
                 "refund_date",
                 "detail_status_code",
                 "detail_status_code_title"
+              ]
+            }
+          }
+        }
+      },
+      "Transfer": {
+        "description": "bad paramater send",
+        "headers": {},
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "description": "0 OR 1"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Error or success mesage"
+                }
+              },
+              "required": [
+                "status",
+                "message"
               ]
             }
           }
