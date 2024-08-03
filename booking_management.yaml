@@ -28,9 +28,12 @@ paths:
                   type: string
                 password:
                   type: string
+                center_id:
+                  type: string
               required:
                 - username
                 - password
+                - center_id
       responses:
         '200':
           description: when api key generated successfully
@@ -87,26 +90,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/appointment'
-      tags:
-        - Appointment
-  /v1/appoitments/{id}:
-    summary: work with specific appointment
-    delete:
-      summary: delete an appointment
-      description: ''
-      operationId: ''
-      security:
-        - ApiKey: []
-      parameters:
-        - name: id
-          in: path
-          schema:
-            type: string
-            format: uuid
-          required: true
-      responses:
-        '204':
-          description: when the appointment deletes successfully
       tags:
         - Appointment
 components:
