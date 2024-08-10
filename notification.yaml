@@ -20,6 +20,17 @@ paths:
       description: "This endpoint allows you to check the possibility of sending notifications to subscribers."
       tags:
         - Subscribers
+      parameters:
+        - in: path
+          name: app_id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: "The user has given access to the notification."
@@ -35,6 +46,17 @@ paths:
       description: "This endpoint sends a push notification to a specific Paziresh24 user."
       tags:
         - Trigger
+      parameters:
+        - in: path
+          name: app_id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
