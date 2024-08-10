@@ -14,7 +14,7 @@ tags:
   - name: Trigger
     description: Send notification
 paths:
-  /apps/{app_id}/notifications/subscribers/{user_id}:
+  /apps/{app_id}/notifications/subscribers/{user_id}/:
     get:
       summary: "Get Notification Subscribers"
       description: "This endpoint allows you to check the possibility of sending notifications to subscribers."
@@ -40,7 +40,7 @@ paths:
           description: "Unauthorized request due to invalid or missing authorization token."
       security:
         - authorizations: []
-  /apps/{app_id}/notifications/trigger/{user_id}:
+  /apps/{app_id}/notifications/trigger/{user_id}/:
     post:
       summary: "Send a Push Notification"
       description: "This endpoint sends a push notification to a specific Paziresh24 user."
