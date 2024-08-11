@@ -34,7 +34,7 @@ paths:
       responses:
         '200':
           description: "The user has given access to the notification."
-        '403':
+        '404':
           description: "User not found."
         '401':
           description: "Unauthorized request due to invalid or missing authorization token."
@@ -96,6 +96,8 @@ paths:
       responses:
         '200':
           description: "The request has been accepted and the notification will be processed."
+        '404':
+          description: "User not found."
         '401':
           description: "Unauthorized request due to invalid or missing authorization token."
       security:
