@@ -73,6 +73,21 @@ paths:
                 url:
                   type: "string"
                   description: "A URL that can be included in the notification to direct the user to a specific webpage."
+                buttons:
+                  type: "array"
+                  description: "If you don't intend to use the button, you should send []."
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                        description: title of the button
+                      url:
+                        type: string
+                        description: url of the button
+                icon:
+                  type: "string"
+                  description: "A URL to an icon that can be included in the notification."
                 image:
                   type: "string"
                   description: "A URL to an image that can be included in the notification."
@@ -80,6 +95,7 @@ paths:
                 - title
                 - text
                 - url
+                - buttons
       responses:
         '200':
           description: "The request has been accepted and the notification will be processed."
