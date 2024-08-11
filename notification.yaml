@@ -75,7 +75,6 @@ paths:
                   description: "A URL that can be included in the notification to direct the user to a specific webpage."
                 buttons:
                   type: "array"
-                  description: "If you don't intend to use the button, you should send []."
                   items:
                     type: object
                     properties:
@@ -94,8 +93,6 @@ paths:
               required:
                 - title
                 - text
-                - url
-                - buttons
       responses:
         '200':
           description: "The request has been accepted and the notification will be processed."
