@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: "API documentation for sending and tracking push notifications to Paziresh24 users."
+  description: "API documentation for sending push notifications to Paziresh24 users."
   version: "1"
   title: "Notification API"
   contact:
