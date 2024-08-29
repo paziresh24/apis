@@ -40,9 +40,71 @@ paths:
           description: "Unauthorized request due to invalid or missing authorization token."
       security:
         - authorizations: []
+  /apps/{app_key}/notifications/trigger:
+    post:
+      summary: "Send a Push Notification to a specific Paziresh24 user (with cell number)"
+      description: "This endpoint sends a push notification to a specific Paziresh24 user."
+      tags:
+        - Trigger
+      parameters:
+        - in: path
+          name: app_key
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: cell
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                title:
+                  type: "string"
+                  description: "The title of the push notification, which will appear in bold. This parameter can have a maximum of 100 characters."
+                body:
+                  type: "string"
+                  description: "The main content of the push notification. This parameter allows a maximum of 200 characters"
+                url:
+                  type: "string"
+                  description: "A URL that can be included in the notification to direct the user to a specific webpage."
+                buttons:
+                  type: "array"
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                        description: title of the button
+                      url:
+                        type: string
+                        description: url of the button
+                icon:
+                  type: "string"
+                  description: "A URL to an icon that can be included in the notification."
+                image:
+                  type: "string"
+                  description: "A URL to an image that can be included in the notification."
+              required:
+                - title
+                - text
+      responses:
+        '200':
+          description: "The request has been accepted and the notification will be processed."
+        '404':
+          description: "User not found."
+        '401':
+          description: "Unauthorized request due to invalid or missing authorization token."
+      security:
+        - authorizations: []
   /apps/{app_key}/notifications/trigger/{user_id}/:
     post:
-      summary: "Send a Push Notification"
+      summary: "Send a Push Notification to a specific Paziresh24 user"
       description: "This endpoint sends a push notification to a specific Paziresh24 user."
       tags:
         - Trigger
