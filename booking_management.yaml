@@ -133,6 +133,8 @@ components:
           $ref: '#/components/schemas/doctor'
         center:
           $ref: '#/components/schemas/center'
+        payment:
+          $ref: '#/components/schemas/payment'
 
     patient:
       description: patient info
@@ -177,6 +179,17 @@ components:
           type: string
         address:
           type: string
+    payment:
+      description: payment info
+      properties:
+        book_status:
+          type: string
+          enum: ['paid','not-paid', 'paying', 'refunded', 'refund-request']
+        factor_status:
+          type: string
+          enum: ['paid', 'not-paid', 'expired', 'paying', 'refunded']
+        cost:
+          type: integer
   securitySchemes:
     ApiKey:
       type: apiKey
