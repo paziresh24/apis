@@ -52,21 +52,43 @@ paths:
   /v1/appointments:
     get:
       summary: get list of appointments
-      description: ''
+      description: 'پارامتر center_id الزامی است و سایر پارامترها اختیاری هستند. در صورتی که نوبت‌های یک پزشک خاص را می‌خواهید، مقدار user_center_id یا medical_code را وارد نمایید.'
       operationId: ''
       security:
         - ApiKey: []
       parameters:
         - name: date_start
           in: query
+          description: 'فرمت تاریخ ISO 8601. می‌توانید بدون ساعت هم ارسال کنید (مثال: 2023-09-19).'
+          examples:
+            dateTime:
+              summary: 'تاریخ و ساعت'
+              value: '2023-09-19T00:00:00Z'
+            dateOnly:
+              summary: 'فقط تاریخ'
+              value: '2023-09-19'
           schema:
-            type: string
-            format: date-time
+            oneOf:
+              - type: string
+                format: date-time
+              - type: string
+                format: date
         - name: date_end
           in: query
+          description: 'فرمت تاریخ ISO 8601. می‌توانید بدون ساعت هم ارسال کنید (مثال: 2023-09-19).'
+          examples:
+            dateTime:
+              summary: 'تاریخ و ساعت'
+              value: '2023-09-19T23:59:59Z'
+            dateOnly:
+              summary: 'فقط تاریخ'
+              value: '2023-09-19'
           schema:
-            type: string
-            format: date-time
+            oneOf:
+              - type: string
+                format: date-time
+              - type: string
+                format: date
         - name: medical_code
           in: query
           schema:
@@ -78,6 +100,7 @@ paths:
             format: uuid
         - name: center_id
           in: query
+          required: true
           schema:
             type: string
             format: uuid
