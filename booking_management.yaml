@@ -2,7 +2,16 @@ openapi: 3.0.0
 info:
   title: Paziresh24 booking management
   version: '1.0'
-  description: Management system for doctors or facilities.
+  description: |
+    Management system for doctors or facilities.
+
+    <div dir="rtl" lang="fa">
+    <strong>راهنمای تنظیم توکن</strong><br/>
+    ۱) ابتدا با فراخوانی <code>/v1/login</code> مقدار <code>certificate</code> را دریافت کنید.<br/>
+    ۲) سپس در بالای صفحه روی دکمه <code>Authorize</code> یا آیکون قفل 🔒 کلیک کنید.<br/>
+    ۳) مقدار دریافت‌شده را در فیلد <code>X-API-KEY</code> وارد کرده و روی <code>Authorize</code> بزنید.<br/>
+    پس از آن می‌توانید روی <code>Try it out</code> کلیک کرده و درخواست‌ها را ارسال کنید.
+    </div>
   termsOfService: https://www.paziresh24.com/home/rules/
   contact:
     email: info@paziresh24.com
@@ -52,7 +61,7 @@ paths:
   /v1/appointments:
     get:
       summary: get list of appointments
-      description: "<div dir=\"rtl\" lang=\"fa\">پارامتر center_id الزامی است و سایر پارامترها اختیاری هستند. در صورتی که نوبت‌های یک پزشک خاص را می‌خواهید، مقدار user_center_id یا medical_code را وارد نمایید.</div>"
+      description: "<div dir=\"rtl\" lang=\"fa\">پارامتر center_id الزامی است و سایر پارامترها اختیاری هستند. در صورتی که نوبت‌های یک پزشک خاص را می‌خواهید، مقدار user_center_id یا medical_code را وارد نمایید.<br/><br/><strong>نکته:</strong> برای تنظیم توکن، روی آیکون قفل 🔒 یا دکمه Authorize کلیک کنید و مقدار X-API-KEY را وارد نمایید.</div>"
       operationId: ''
       security:
         - ApiKey: []
@@ -218,3 +227,4 @@ components:
       type: apiKey
       in: header
       name: X-API-KEY
+      description: "<div dir=\"rtl\" lang=\"fa\">برای احراز هویت، مقدار <code>certificate</code> را از سرویس <code>/v1/login</code> دریافت کرده و در فیلد <code>X-API-KEY</code> وارد کنید. در Swagger UI با کلیک روی دکمه <code>Authorize</code> یا آیکون قفل 🔒 می‌توانید این مقدار را تنظیم کنید.</div>"
