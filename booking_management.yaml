@@ -2,7 +2,16 @@ openapi: 3.0.0
 info:
   title: Paziresh24 booking management
   version: '1.0'
-  description: Management system for doctors or facilities.
+  description: |
+    Management system for doctors or facilities.
+
+    <div dir="rtl" lang="fa">
+    <strong>راهنمای تنظیم توکن</strong><br/>
+    ۱) ابتدا با فراخوانی <code>/v1/login</code> مقدار <code>certificate</code> را دریافت کنید.<br/>
+    ۲) سپس در بالای صفحه روی دکمه <code>Authorize</code> یا آیکون قفل 🔒 کلیک کنید.<br/>
+    ۳) مقدار دریافت‌شده را در فیلد <code>X-API-KEY</code> وارد کرده و روی <code>Authorize</code> بزنید.<br/>
+    پس از آن می‌توانید روی <code>Try it out</code> کلیک کرده و درخواست‌ها را ارسال کنید.
+    </div>
   termsOfService: https://www.paziresh24.com/home/rules/
   contact:
     email: info@paziresh24.com
@@ -28,9 +37,12 @@ paths:
                   type: string
                 password:
                   type: string
+                center_id:
+                  type: string
               required:
                 - username
                 - password
+                - center_id
       responses:
         '200':
           description: when api key generated successfully
@@ -49,21 +61,43 @@ paths:
   /v1/appointments:
     get:
       summary: get list of appointments
-      description: ''
+      description: "<div dir=\"rtl\" lang=\"fa\">پارامتر center_id الزامی است و سایر پارامترها اختیاری هستند. در صورتی که نوبت‌های یک پزشک خاص را می‌خواهید، مقدار user_center_id یا medical_code را وارد نمایید.<br/><br/><strong>نکته:</strong> برای تنظیم توکن، روی آیکون قفل 🔒 یا دکمه Authorize کلیک کنید و مقدار X-API-KEY را وارد نمایید.</div>"
       operationId: ''
       security:
         - ApiKey: []
       parameters:
         - name: date_start
           in: query
+          description: "<span dir=\"rtl\" lang=\"fa\">فرمت تاریخ ISO 8601. می‌توانید بدون ساعت هم ارسال کنید (مثال: 2023-09-19).</span>"
+          examples:
+            dateTime:
+              summary: 'تاریخ و ساعت'
+              value: '2023-09-19T00:00:00Z'
+            dateOnly:
+              summary: 'فقط تاریخ'
+              value: '2023-09-19'
           schema:
-            type: string
-            format: date-time
+            oneOf:
+              - type: string
+                format: date-time
+              - type: string
+                format: date
         - name: date_end
           in: query
+          description: "<span dir=\"rtl\" lang=\"fa\">فرمت تاریخ ISO 8601. می‌توانید بدون ساعت هم ارسال کنید (مثال: 2023-09-19).</span>"
+          examples:
+            dateTime:
+              summary: 'تاریخ و ساعت'
+              value: '2023-09-19T23:59:59Z'
+            dateOnly:
+              summary: 'فقط تاریخ'
+              value: '2023-09-19'
           schema:
-            type: string
-            format: date-time
+            oneOf:
+              - type: string
+                format: date-time
+              - type: string
+                format: date
         - name: medical_code
           in: query
           schema:
@@ -75,6 +109,7 @@ paths:
             format: uuid
         - name: center_id
           in: query
+          required: true
           schema:
             type: string
             format: uuid
@@ -97,124 +132,6 @@ paths:
                   $ref: '#/components/schemas/appointment'
       tags:
         - Appointment
-  /v1/appoitments/{id}:
-    summary: work with specific appointment
-    delete:
-      summary: delete an appointment
-      description: ''
-      operationId: ''
-      security:
-        - ApiKey: []
-      parameters:
-        - name: id
-          in: path
-          schema:
-            type: string
-            format: uuid
-          required: true
-      responses:
-        '204':
-          description: when the appointment deletes successfully
-      tags:
-        - Appointment
-  /v1/followbook:
-    post:
-      summary: Follow and manage booking information
-      description: This endpoint allows users to retrieve booking information based on various criteria. It ensures that only appointments accessible to the user (identified by the certificate) for their authorized doctors and centers are returned.
-      operationId: followBook
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                certificate:
-                  type: string
-                  description: Certificate for authentication. (Required)
-                  nullable: false
-                ref_id:
-                  type: string
-                  description: Reference ID of the booking (tracking code). (Required)
-                  nullable: false
-                national_code:
-                  type: string
-                  description: National code of the patient. (Optional)
-                  nullable: true
-                date:
-                  type: string
-                  description: Date of the booking in YYYY/MM/DD (Gregorian) or YYYY/MM/DD (Jalali) format. (Optional)
-                  nullable: true
-                center_id:
-                  type: string
-                  format: uuid
-                  description: Center ID. (Optional)
-                  nullable: true
-                medical_code:
-                  type: string
-                  description: Medical code of the doctor. (Optional)
-                  nullable: true
-              required:
-                - certificate
-                - ref_id
-      responses:
-        '200':
-          description: Successful operation. Returns the booking information.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    description: Status code (0 for success).\n                    example: 0
-                  message:
-                    type: string
-                    description: A human-readable message.\n                    example: "Booking information retrieved successfully."
-                  book:
-                    $ref: '#/components/schemas/appointment'
-                    description: The requested appointment details.
-        '400':
-          description: Bad request due to invalid or missing required parameters.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    description: Error status code.\n                    example: 4
-                  error_message:
-                    type: string
-                    description: A descriptive error message.\n                    example: "Bad parameters send!"
-        '401':
-          description: Unauthorized due to invalid certificate.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    description: Error status code.\n                    example: 23
-                  error_message:
-                    type: string
-                    description: A descriptive error message.\n                    example: "Invalid certificate code!"
-        '404':
-          description: Book not found.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    description: Error status code.\n                    example: 4
-                  error_message:
-                    type: string
-                    description: A descriptive error message.\n                    example: "Book not found!"
-      tags:
-        - Booking Management
 components:
   schemas:
     appointment:
@@ -256,6 +173,8 @@ components:
           $ref: '#/components/schemas/doctor'
         center:
           $ref: '#/components/schemas/center'
+        payment:
+          $ref: '#/components/schemas/payment'
 
     patient:
       description: patient info
@@ -300,8 +219,20 @@ components:
           type: string
         address:
           type: string
+    payment:
+      description: payment info
+      properties:
+        book_status:
+          type: string
+          enum: ['paid','not-paid', 'paying', 'refunded', 'refund-request']
+        factor_status:
+          type: string
+          enum: ['paid', 'not-paid', 'expired', 'paying', 'refunded']
+        cost:
+          type: integer
   securitySchemes:
     ApiKey:
       type: apiKey
       in: header
       name: X-API-KEY
+      description: "<div dir=\"rtl\" lang=\"fa\">برای احراز هویت، مقدار <code>certificate</code> را از سرویس <code>/v1/login</code> دریافت کرده و در فیلد <code>X-API-KEY</code> وارد کنید. در Swagger UI با کلیک روی دکمه <code>Authorize</code> یا آیکون قفل 🔒 می‌توانید این مقدار را تنظیم کنید.</div>"
