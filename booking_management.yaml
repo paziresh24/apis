@@ -78,6 +78,14 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: ref_id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            شناسه پیگیری/رفرنس نوبت (ref_id)
+            توجه: این پارامتر ممکن است برای چند نوبت مختلف یکسان باشد. برای اطمینان از بازیابی صحیح نوبت خود، پیشنهاد می‌شود علاوه‌بر ref_id، کد نظام پزشکی doctor (پارامتر medical_code) را نیز وارد کنید.
       responses:
         '200':
           description: List of books
@@ -109,6 +117,104 @@ paths:
           description: when the appointment deletes successfully
       tags:
         - Appointment
+  /v1/followbook:
+    post:
+      summary: Follow and manage booking information
+      description: This endpoint allows users to retrieve booking information based on various criteria. It ensures that only appointments accessible to the user (identified by the certificate) for their authorized doctors and centers are returned.
+      operationId: followBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                certificate:
+                  type: string
+                  description: Certificate for authentication. (Required)
+                  nullable: false
+                ref_id:
+                  type: string
+                  description: Reference ID of the booking (tracking code). (Required)
+                  nullable: false
+                national_code:
+                  type: string
+                  description: National code of the patient. (Optional)
+                  nullable: true
+                date:
+                  type: string
+                  description: Date of the booking in YYYY/MM/DD (Gregorian) or YYYY/MM/DD (Jalali) format. (Optional)
+                  nullable: true
+                center_id:
+                  type: string
+                  format: uuid
+                  description: Center ID. (Optional)
+                  nullable: true
+                medical_code:
+                  type: string
+                  description: Medical code of the doctor. (Optional)
+                  nullable: true
+              required:
+                - certificate
+                - ref_id
+      responses:
+        '200':
+          description: Successful operation. Returns the booking information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    description: Status code (0 for success).\n                    example: 0
+                  message:
+                    type: string
+                    description: A human-readable message.\n                    example: "Booking information retrieved successfully."
+                  book:
+                    $ref: '#/components/schemas/appointment'
+                    description: The requested appointment details.
+        '400':
+          description: Bad request due to invalid or missing required parameters.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    description: Error status code.\n                    example: 4
+                  error_message:
+                    type: string
+                    description: A descriptive error message.\n                    example: "Bad parameters send!"
+        '401':
+          description: Unauthorized due to invalid certificate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    description: Error status code.\n                    example: 23
+                  error_message:
+                    type: string
+                    description: A descriptive error message.\n                    example: "Invalid certificate code!"
+        '404':
+          description: Book not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    description: Error status code.\n                    example: 4
+                  error_message:
+                    type: string
+                    description: A descriptive error message.\n                    example: "Book not found!"
+      tags:
+        - Booking Management
 components:
   schemas:
     appointment:
