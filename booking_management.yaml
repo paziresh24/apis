@@ -119,8 +119,10 @@ paths:
           schema:
             type: string
           description: |
+            <div dir="rtl" lang="fa">
             شناسه پیگیری/رفرنس نوبت (ref_id)
             توجه: این پارامتر ممکن است برای چند نوبت مختلف یکسان باشد. برای اطمینان از بازیابی صحیح نوبت خود، پیشنهاد می‌شود علاوه‌بر ref_id، کد نظام پزشکی doctor (پارامتر medical_code) را نیز وارد کنید.
+            </div>
       responses:
         '200':
           description: List of books
