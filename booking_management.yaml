@@ -169,6 +169,11 @@ components:
         payment_status:
           type: integer
           example: 1
+        book_type:
+          type: integer
+          description: "<div dir=\"rtl\" lang=\"fa\">نوع نوبت: وب سایت مرکز=1، تلفنی=2، حضوری=3، اپلیکیشن مرکز=4، تلگرام=5، کیوسک فراخوان=6، وب سایت پذیرش24=7، اپلیکیشن پذیرش24=8، درخواست نوبت=11، نظام ارجاع=12، USSD=13</div>"
+          enum: [1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13]
+          example: 12
         patient:
           $ref: '#/components/schemas/patient'
         doctor:
@@ -177,6 +182,24 @@ components:
           $ref: '#/components/schemas/center'
         payment:
           $ref: '#/components/schemas/payment'
+          nullable: true
+          description: "<div dir=\"rtl\" lang=\"fa\">فقط برای مراکزی که پرداخت فعال دارند برگردانده می‌شود. در صورت عدم وجود، این فیلد null است.</div>"
+        referral_tqid:
+          type: string
+          nullable: true
+          description: "<div dir=\"rtl\" lang=\"fa\">شناسه پیگیری نوبت در نظام ارجاع (Tracking Queue ID). فقط برای نوبت‌های نظام ارجاع وجود دارد.</div>"
+          example: "4:cb67dc00-a47b-4ff8-b51b-4621051c47d1"
+        referral_status:
+          type: integer
+          nullable: true
+          description: "<div dir=\"rtl\" lang=\"fa\">وضعیت نوبت در نظام ارجاع: 1=خالی، 2=اخذ شده، 3=ویزیت شده، 4=لغو شده توسط بیمار، 5=لغو شده توسط پزشک، 6=لغو شده به علت تاخیر بیمار</div>"
+          enum: [1, 2, 3, 4, 5, 6]
+          example: 2
+        book_number:
+          type: string
+          nullable: true
+          description: "<div dir=\"rtl\" lang=\"fa\">شماره نوبت. در صورت عدم وجود، خالی است.</div>"
+          example: ""
 
     patient:
       description: patient info
@@ -189,10 +212,18 @@ components:
           example: صدر
         cell:
           type: string
+          nullable: true
+          description: "<div dir=\"rtl\" lang=\"fa\">شماره موبایل بیمار. در صورت عدم وجود می‌تواند خالی باشد.</div>"
           example: 913456789
         national_code:
           type: string
           example: 1234567890
+        gender:
+          type: integer
+          nullable: true
+          description: "<div dir=\"rtl\" lang=\"fa\">جنسیت: 1=مرد، 2=زن</div>"
+          enum: [1, 2]
+          example: 1
     doctor:
       description: doctor info
       properties:
@@ -216,11 +247,14 @@ components:
       properties:
         id:
           type: string
-          format: uuid
+          description: "<div dir=\"rtl\" lang=\"fa\">شناسه مرکز که می‌تواند عددی (مراکز قدیمی) یا UUID (مراکز جدید) باشد</div>"
+          example: "379"
         name:
           type: string
         address:
           type: string
+          nullable: true
+          description: "<div dir=\"rtl\" lang=\"fa\">آدرس مرکز. در صورت وجود برگردانده می‌شود.</div>"
     payment:
       description: payment info
       properties:
@@ -229,7 +263,9 @@ components:
           enum: ['paid','not-paid', 'paying', 'refunded', 'refund-request']
         factor_status:
           type: string
-          enum: ['paid', 'not-paid', 'expired', 'paying', 'refunded']
+          nullable: true
+          description: "<div dir=\"rtl\" lang=\"fa\">وضعیت فاکتور. می‌تواند خالی باشد.</div>"
+          enum: ['paid', 'not-paid', 'expired', 'paying', 'refunded', '']
         cost:
           type: integer
   securitySchemes:
